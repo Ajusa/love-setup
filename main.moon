@@ -1,10 +1,5 @@
-sti = require "sti"
-Camera = require "camera"
-bump = require 'bump'
-love.graphics.setDefaultFilter("nearest")
-love.graphics.setFont(love.graphics.newFont("kenpixel.ttf", 16))
-love.window.setFullscreen(true)
-random = (l, h) -> love.math.random(l, h)
+assert(love.filesystem.load("lib/lib.lua"))!
+--love.window.setFullscreen(true)
 collision = (x1,y1,w1,h1, x2,y2,w2,h2) -> x1 < x2+w2 and x2 < x1+w1 and y1 < y2+h2 and y2 < y1+h1
 playerFilter = (item, other) -> if other.p != nil and other.p.isEnemy then "cross" else "slide"
 enemyFilter = (item, other) -> if other.p != nil and (other.p.isEnemy or other.p.speed == 100) then false else "slide"
@@ -91,7 +86,7 @@ class BeforeFight extends BaseState
 		export map = sti("data/castle.lua", {"bump"})
 		player.p.x, player.p.y = (10)*64, (3)*64
 		super!
-		love.audio.newSource("beforegame.ogg")\play!
+		love.audio.newSource("sound/beforegame.ogg")\play!
 		@messenger = love.graphics.newImage("messenger.png")
 		@temp = 0
 	update: (dt) =>

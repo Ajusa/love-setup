@@ -1,13 +1,4 @@
-local sti = require("sti")
-local Camera = require("camera")
-local bump = require('bump')
-love.graphics.setDefaultFilter("nearest")
-love.graphics.setFont(love.graphics.newFont("kenpixel.ttf", 16))
-love.window.setFullscreen(true)
-local random
-random = function(l, h)
-  return love.math.random(l, h)
-end
+assert(love.filesystem.load("lib/lib.lua"))()
 local collision
 collision = function(x1, y1, w1, h1, x2, y2, w2, h2)
   return x1 < x2 + w2 and x2 < x1 + w1 and y1 < y2 + h2 and y2 < y1 + h1
@@ -428,7 +419,7 @@ do
       })
       player.p.x, player.p.y = (10) * 64, (3) * 64
       _class_0.__parent.__init(self)
-      love.audio.newSource("beforegame.ogg"):play()
+      love.audio.newSource("sound/beforegame.ogg"):play()
       self.messenger = love.graphics.newImage("messenger.png")
       self.temp = 0
     end,
