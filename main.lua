@@ -1,24 +1,4 @@
 assert(love.filesystem.load("lib/lib.lua"))()
-local collision
-collision = function(x1, y1, w1, h1, x2, y2, w2, h2)
-  return x1 < x2 + w2 and x2 < x1 + w1 and y1 < y2 + h2 and y2 < y1 + h1
-end
-local playerFilter
-playerFilter = function(item, other)
-  if other.p ~= nil and other.p.isEnemy then
-    return "cross"
-  else
-    return "slide"
-  end
-end
-local enemyFilter
-enemyFilter = function(item, other)
-  if other.p ~= nil and (other.p.isEnemy or other.p.speed == 100) then
-    return false
-  else
-    return "slide"
-  end
-end
 local sinceFire = 0
 local score = 0
 local enemies = { }
@@ -85,7 +65,7 @@ do
       self.p.speed = self.p.speed + dt
       local angle = math.atan2((player.p.y - self.p.y), (player.p.x - self.p.x))
       self.p.dx, self.p.dy = self.p.speed * math.cos(angle), self.p.speed * math.sin(angle)
-      self.p.x, self.p.y = world:move(self, self.p.x + self.p.dx * dt, self.p.y + self.p.dy * dt, enemyFilter)
+      self.p.x, self.p.y = world:move(self, self.p.x + self.p.dx * dt, self.p.y + self.p.dy * dt, walls)
       for i = #bullets, 1, -1 do
         if collision(bullets[i].p.x, bullets[i].p.y, 20, 40, self.p.x, self.p.y, 64, 64) then
           self.p.lives = self.p.lives - 1
@@ -198,16 +178,16 @@ do
     update = function(self, dt)
       if not self.p.disabled then
         if love.keyboard.isDown("a") then
-          self.p.x, self.p.y = world:move(self, self.p.x - self.p.speed * dt, self.p.y, playerFilter)
+          self.p.x, self.p.y = world:move(self, self.p.x - self.p.speed * dt, self.p.y, walls)
         end
         if love.keyboard.isDown("d") then
-          self.p.x, self.p.y = world:move(self, self.p.x + self.p.speed * dt, self.p.y, playerFilter)
+          self.p.x, self.p.y = world:move(self, self.p.x + self.p.speed * dt, self.p.y, walls)
         end
         if love.keyboard.isDown("w") then
-          self.p.x, self.p.y = world:move(self, self.p.x, self.p.y - self.p.speed * dt, playerFilter)
+          self.p.x, self.p.y = world:move(self, self.p.x, self.p.y - self.p.speed * dt, walls)
         end
         if love.keyboard.isDown("s") then
-          self.p.x, self.p.y = world:move(self, self.p.x, self.p.y + self.p.speed * dt, playerFilter)
+          self.p.x, self.p.y = world:move(self, self.p.x, self.p.y + self.p.speed * dt, walls)
         end
         for i = #enemies, 1, -1 do
           if collision(enemies[i].p.x + 8, enemies[i].p.y + 8, 48, 48, self.p.x, self.p.y, 64, 64) then
@@ -536,7 +516,7 @@ love.draw = function()
   end
 end
 love.mousepressed = function(x, y, button)
-  if button == 1 and sinceFire > .3 then
+  if button == 1 and sinceFire > .3 and not player.p.disabled then
     sinceFire = 0
     local startX, startY = player.p.x + 32, player.p.y + 32
     local mouseX, mouseY = camera:worldCoords(x, y)

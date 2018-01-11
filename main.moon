@@ -1,8 +1,7 @@
 assert(love.filesystem.load("lib/lib.lua"))!
 --love.window.setFullscreen(true)
-collision = (x1,y1,w1,h1, x2,y2,w2,h2) -> x1 < x2+w2 and x2 < x1+w1 and y1 < y2+h2 and y2 < y1+h1
-playerFilter = (item, other) -> if other.p != nil and other.p.isEnemy then "cross" else "slide"
-enemyFilter = (item, other) -> if other.p != nil and (other.p.isEnemy or other.p.speed == 100) then false else "slide"
+
+
 sinceFire = 0
 score = 0
 enemies = {}
@@ -22,7 +21,7 @@ class Enemy extends Entity
 		@p.speed += dt
 		angle = math.atan2((player.p.y - @p.y), (player.p.x - @p.x))
 		@p.dx, @p.dy  = @p.speed * math.cos(angle), @p.speed * math.sin(angle)
-		@p.x, @p.y = world\move(self,@p.x + @p.dx*dt, @p.y + @p.dy*dt, enemyFilter)
+		@p.x, @p.y = world\move(self,@p.x + @p.dx*dt, @p.y + @p.dy*dt, walls)
 		for i=#bullets,1,-1 do if collision(bullets[i].p.x, bullets[i].p.y, 20, 40, @p.x, @p.y, 64, 64) then
 				@p.lives -= 1
 				score += 1
@@ -44,10 +43,10 @@ class Player extends Entity
 	draw: => love.graphics.draw(@p.image, @p.x, @p.y, 0,4,4)
 	update: (dt) =>
 		if not @p.disabled
-			if love.keyboard.isDown("a") then @p.x, @p.y = world\move(self, @p.x - @p.speed*dt,@p.y, playerFilter)
-			if love.keyboard.isDown("d") then @p.x, @p.y = world\move(self, @p.x + @p.speed*dt,@p.y, playerFilter)
-			if love.keyboard.isDown("w") then @p.x, @p.y = world\move(self, @p.x, @p.y - @p.speed*dt, playerFilter)
-			if love.keyboard.isDown("s") then @p.x, @p.y = world\move(self, @p.x, @p.y + @p.speed*dt, playerFilter)
+			if love.keyboard.isDown("a") then @p.x, @p.y = world\move(self, @p.x - @p.speed*dt,@p.y, walls)
+			if love.keyboard.isDown("d") then @p.x, @p.y = world\move(self, @p.x + @p.speed*dt,@p.y, walls)
+			if love.keyboard.isDown("w") then @p.x, @p.y = world\move(self, @p.x, @p.y - @p.speed*dt, walls)
+			if love.keyboard.isDown("s") then @p.x, @p.y = world\move(self, @p.x, @p.y + @p.speed*dt, walls)
 			for i=#enemies,1,-1 do if collision(enemies[i].p.x + 8, enemies[i].p.y + 8, 48, 48, @p.x, @p.y, 64, 64) -- the 8's are for a smaller hitbox
 					@p.lives -= 1
 					table.remove(enemies, i)
@@ -148,7 +147,7 @@ love.draw = ->
 		love.graphics.print("Score: ".. score, love.graphics.getWidth!/4, love.graphics.getHeight!/1.5)
 		love.graphics.print("Hit enter to play again ", love.graphics.getWidth!/4, love.graphics.getHeight!/1.2)
 love.mousepressed = (x, y, button) ->
-	if button == 1 and sinceFire > .3
+	if button == 1 and sinceFire > .3 and not player.p.disabled
 		sinceFire = 0
 		startX, startY = player.p.x + 32, player.p.y + 32
 		mouseX, mouseY = camera\worldCoords(x,y) --this stops the mouse coords from being off from the real coors, cause we have a camera
