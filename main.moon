@@ -7,9 +7,6 @@ sinceFire = 0
 score = 0
 enemies = {}
 --Classes--
-class Entity
-  new: (p) => @p = p
-  update: (dt) => @p.x, @p.y = @p.x + @p.dx*dt, @p.y + @p.dy*dt
 class Dagger extends Entity
 	draw: => love.graphics.draw(dagger, @p.x, @p.y, @p.angle)
 	update: (dt, i) => 
@@ -46,13 +43,14 @@ class Macduff extends Entity
 class Player extends Entity		
 	draw: => love.graphics.draw(@p.image, @p.x, @p.y, 0,4,4)
 	update: (dt) =>
-		if love.keyboard.isDown("a") then @p.x, @p.y = world\move(self, @p.x - @p.speed*dt,@p.y, playerFilter)
-		if love.keyboard.isDown("d") then @p.x, @p.y = world\move(self, @p.x + @p.speed*dt,@p.y, playerFilter)
-		if love.keyboard.isDown("w") then @p.x, @p.y = world\move(self, @p.x, @p.y - @p.speed*dt, playerFilter)
-		if love.keyboard.isDown("s") then @p.x, @p.y = world\move(self, @p.x, @p.y + @p.speed*dt, playerFilter)
-		for i=#enemies,1,-1 do if collision(enemies[i].p.x + 8, enemies[i].p.y + 8, 48, 48, @p.x, @p.y, 64, 64) -- the 8's are for a smaller hitbox
-				@p.lives -= 1
-				table.remove(enemies, i)
+		if not @p.disabled
+			if love.keyboard.isDown("a") then @p.x, @p.y = world\move(self, @p.x - @p.speed*dt,@p.y, playerFilter)
+			if love.keyboard.isDown("d") then @p.x, @p.y = world\move(self, @p.x + @p.speed*dt,@p.y, playerFilter)
+			if love.keyboard.isDown("w") then @p.x, @p.y = world\move(self, @p.x, @p.y - @p.speed*dt, playerFilter)
+			if love.keyboard.isDown("s") then @p.x, @p.y = world\move(self, @p.x, @p.y + @p.speed*dt, playerFilter)
+			for i=#enemies,1,-1 do if collision(enemies[i].p.x + 8, enemies[i].p.y + 8, 48, 48, @p.x, @p.y, 64, 64) -- the 8's are for a smaller hitbox
+					@p.lives -= 1
+					table.remove(enemies, i)
 --States--
 class BaseState
 	new: =>
@@ -67,10 +65,9 @@ class MainGame extends BaseState
 		export world = bump.newWorld!
 		export map = sti("data/testmap.lua", {"bump"})
 		player.p.x, player.p.y, player.p.lives, score = 43*64, 4*64, 5, 0
-		love.graphics.setFont(love.graphics.newFont("kenpixel.ttf", 16))
 		super!
 		export enemies = for i = 1, 40 do Enemy x: random(64*(2), (32)*64), y: random(64*(2), (map.height-2)*64), lives: 5, isEnemy: true, speed: 30
-		export macduff =  Macduff x:128, y: 20*64, speed: 90, image: love.graphics.newImage("macduff.png")
+		export macduff =  Macduff x:128, y: 20*64, speed: 90, image: love.graphics.newImage("images/macduff.png")
 	update: (dt) =>
 		if score > 100 then macduff\update(dt)		
 		for i=#enemies,1,-1 do enemies[i]\update(dt,i)
@@ -78,7 +75,6 @@ class MainGame extends BaseState
 		if love.keyboard.isDown("return") then export STATE = MainGame!
 	draw: =>
 		super!
-		
 		for i,v in ipairs(enemies) do v\draw!
 class BeforeFight extends BaseState
 	new: =>
@@ -86,13 +82,14 @@ class BeforeFight extends BaseState
 		export map = sti("data/castle.lua", {"bump"})
 		player.p.x, player.p.y = (10)*64, (3)*64
 		super!
-		love.audio.newSource("sound/beforegame.ogg")\play!
-		@messenger = love.graphics.newImage("messenger.png")
-		@temp = 0
+		line = love.audio.newSource("sound/beforegame.ogg")
+		line\play!
+		@messenger = love.graphics.newImage("images/messenger.png")
+		player.p.disabled = true
+		Timer.after(line\getDuration!, () -> player.p.disabled = false)
 	update: (dt) =>
-		@temp += dt
 		if collision(player.p.x, player.p.y, 64, 64, 9*64, 24*64, 128, 64) then export STATE = MainGame!
-		if @temp > 25 then player\update(dt)
+		player\update(dt)
 	draw: (dt) =>
 		super!
 		love.graphics.draw(@messenger, 10*64, 5*64, 0,4,4)
@@ -101,32 +98,31 @@ class Castle extends BaseState
 		export world = bump.newWorld!
 		export map = sti("data/castle.lua", {"bump"})
 		player.p.x, player.p.y = (17)*64, (15)*64
-		@duncan = love.graphics.newImage("duncan.png")
+		@duncan = love.graphics.newImage("images/duncan.png")
 		@temp = false
 		@time = 0
 		super!
 	update: (dt) => 
 		player\update(dt)
 		for i,v in ipairs(bullets)
-			if collision(v.p.x, v.p.y, 20, 40, 10*64, 3*64, 64, 64) 
-				@temp = true
-				@duncan = love.graphics.newImage("duncandead.png")
-		if @temp then @time += dt
-		if @time > 5 then export STATE = BeforeFight!
+			if collision(v.p.x, v.p.y, 20, 40, 10*64, 3*64, 64, 64)
+				if love.window.showMessageBox("Narrator", "Macbeth becomes king, and soon Malcolm is leading an army against him.") 
+					export STATE = BeforeFight!
+				@duncan = love.graphics.newImage("images/duncandead.png")
 	draw: =>
 		super!
-		if @temp then love.graphics.print("Macbeth becomes king, and soon Malcolm is leading an army against him.", player.p.x - 30, player.p.y - 30)
 		love.graphics.draw(@duncan, 10*64, 3*64, 0,4,4)
 		
 --Actual Game--
 love.load = ->	
-	export player = Player x: 43*64, y: 6*64, w: 64, h: 64, speed: 150, lives: 5, image: love.graphics.newImage("player.png")
+	export player = Player x: 43*64, y: 6*64, w: 64, h: 64, speed: 400, lives: 5, image: love.graphics.newImage("images/player.png")
 	export STATE = Castle!
 	export camera = Camera(player.p.x, player.p.y)
 	export bullets = {}
-	export dagger = love.graphics.newImage("dagger.png")
-	export enemy = love.graphics.newImage("enemy.png")
+	export dagger = love.graphics.newImage("images/dagger.png")
+	export enemy = love.graphics.newImage("images/enemy.png")
 love.update = (dt) ->
+	Timer.update(dt)
 	STATE\update(dt)
 	if player.p.lives > 0
 		-- Update world
@@ -146,9 +142,8 @@ love.draw = ->
 		love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth!, love.graphics.getHeight!)
 		love.graphics.setColor(255, 255, 255, 255)
 		love.graphics.print("Lives: "..player.p.lives, 12, 12)
-		love.graphics.print("Score: "..score, 100, 12)
 	else 
-		love.graphics.setFont(love.graphics.newFont("kenpixel.ttf", 30))
+		love.graphics.setFont(love.graphics.newFont("lib/kenpixel.ttf", 30))
 		love.graphics.print("GAME OVER MACBETH!", love.graphics.getWidth!/4, love.graphics.getHeight!/2)
 		love.graphics.print("Score: ".. score, love.graphics.getWidth!/4, love.graphics.getHeight!/1.5)
 		love.graphics.print("Hit enter to play again ", love.graphics.getWidth!/4, love.graphics.getHeight!/1.2)

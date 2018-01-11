@@ -22,32 +22,6 @@ end
 local sinceFire = 0
 local score = 0
 local enemies = { }
-local Entity
-do
-  local _class_0
-  local _base_0 = {
-    update = function(self, dt)
-      self.p.x, self.p.y = self.p.x + self.p.dx * dt, self.p.y + self.p.dy * dt
-    end
-  }
-  _base_0.__index = _base_0
-  _class_0 = setmetatable({
-    __init = function(self, p)
-      self.p = p
-    end,
-    __base = _base_0,
-    __name = "Entity"
-  }, {
-    __index = _base_0,
-    __call = function(cls, ...)
-      local _self_0 = setmetatable({}, _base_0)
-      cls.__init(_self_0, ...)
-      return _self_0
-    end
-  })
-  _base_0.__class = _class_0
-  Entity = _class_0
-end
 local Dagger
 do
   local _class_0
@@ -222,22 +196,24 @@ do
       return love.graphics.draw(self.p.image, self.p.x, self.p.y, 0, 4, 4)
     end,
     update = function(self, dt)
-      if love.keyboard.isDown("a") then
-        self.p.x, self.p.y = world:move(self, self.p.x - self.p.speed * dt, self.p.y, playerFilter)
-      end
-      if love.keyboard.isDown("d") then
-        self.p.x, self.p.y = world:move(self, self.p.x + self.p.speed * dt, self.p.y, playerFilter)
-      end
-      if love.keyboard.isDown("w") then
-        self.p.x, self.p.y = world:move(self, self.p.x, self.p.y - self.p.speed * dt, playerFilter)
-      end
-      if love.keyboard.isDown("s") then
-        self.p.x, self.p.y = world:move(self, self.p.x, self.p.y + self.p.speed * dt, playerFilter)
-      end
-      for i = #enemies, 1, -1 do
-        if collision(enemies[i].p.x + 8, enemies[i].p.y + 8, 48, 48, self.p.x, self.p.y, 64, 64) then
-          self.p.lives = self.p.lives - 1
-          table.remove(enemies, i)
+      if not self.p.disabled then
+        if love.keyboard.isDown("a") then
+          self.p.x, self.p.y = world:move(self, self.p.x - self.p.speed * dt, self.p.y, playerFilter)
+        end
+        if love.keyboard.isDown("d") then
+          self.p.x, self.p.y = world:move(self, self.p.x + self.p.speed * dt, self.p.y, playerFilter)
+        end
+        if love.keyboard.isDown("w") then
+          self.p.x, self.p.y = world:move(self, self.p.x, self.p.y - self.p.speed * dt, playerFilter)
+        end
+        if love.keyboard.isDown("s") then
+          self.p.x, self.p.y = world:move(self, self.p.x, self.p.y + self.p.speed * dt, playerFilter)
+        end
+        for i = #enemies, 1, -1 do
+          if collision(enemies[i].p.x + 8, enemies[i].p.y + 8, 48, 48, self.p.x, self.p.y, 64, 64) then
+            self.p.lives = self.p.lives - 1
+            table.remove(enemies, i)
+          end
         end
       end
     end
@@ -339,7 +315,6 @@ do
         "bump"
       })
       player.p.x, player.p.y, player.p.lives, score = 43 * 64, 4 * 64, 5, 0
-      love.graphics.setFont(love.graphics.newFont("kenpixel.ttf", 16))
       _class_0.__parent.__init(self)
       do
         local _accum_0 = { }
@@ -360,7 +335,7 @@ do
         x = 128,
         y = 20 * 64,
         speed = 90,
-        image = love.graphics.newImage("macduff.png")
+        image = love.graphics.newImage("images/macduff.png")
       })
     end,
     __base = _base_0,
@@ -396,13 +371,10 @@ do
   local _parent_0 = BaseState
   local _base_0 = {
     update = function(self, dt)
-      self.temp = self.temp + dt
       if collision(player.p.x, player.p.y, 64, 64, 9 * 64, 24 * 64, 128, 64) then
         STATE = MainGame()
       end
-      if self.temp > 25 then
-        return player:update(dt)
-      end
+      return player:update(dt)
     end,
     draw = function(self, dt)
       _class_0.__parent.__base.draw(self)
@@ -419,9 +391,13 @@ do
       })
       player.p.x, player.p.y = (10) * 64, (3) * 64
       _class_0.__parent.__init(self)
-      love.audio.newSource("sound/beforegame.ogg"):play()
-      self.messenger = love.graphics.newImage("messenger.png")
-      self.temp = 0
+      local line = love.audio.newSource("sound/beforegame.ogg")
+      line:play()
+      self.messenger = love.graphics.newImage("images/messenger.png")
+      player.p.disabled = true
+      return Timer.after(line:getDuration(), function()
+        player.p.disabled = false
+      end)
     end,
     __base = _base_0,
     __name = "BeforeFight",
@@ -459,22 +435,15 @@ do
       player:update(dt)
       for i, v in ipairs(bullets) do
         if collision(v.p.x, v.p.y, 20, 40, 10 * 64, 3 * 64, 64, 64) then
-          self.temp = true
-          self.duncan = love.graphics.newImage("duncandead.png")
+          if love.window.showMessageBox("Narrator", "Macbeth becomes king, and soon Malcolm is leading an army against him.") then
+            STATE = BeforeFight()
+          end
+          self.duncan = love.graphics.newImage("images/duncandead.png")
         end
-      end
-      if self.temp then
-        self.time = self.time + dt
-      end
-      if self.time > 5 then
-        STATE = BeforeFight()
       end
     end,
     draw = function(self)
       _class_0.__parent.__base.draw(self)
-      if self.temp then
-        love.graphics.print("Macbeth becomes king, and soon Malcolm is leading an army against him.", player.p.x - 30, player.p.y - 30)
-      end
       return love.graphics.draw(self.duncan, 10 * 64, 3 * 64, 0, 4, 4)
     end
   }
@@ -487,7 +456,7 @@ do
         "bump"
       })
       player.p.x, player.p.y = (17) * 64, (15) * 64
-      self.duncan = love.graphics.newImage("duncan.png")
+      self.duncan = love.graphics.newImage("images/duncan.png")
       self.temp = false
       self.time = 0
       return _class_0.__parent.__init(self)
@@ -525,17 +494,18 @@ love.load = function()
     y = 6 * 64,
     w = 64,
     h = 64,
-    speed = 150,
+    speed = 400,
     lives = 5,
-    image = love.graphics.newImage("player.png")
+    image = love.graphics.newImage("images/player.png")
   })
   STATE = Castle()
   camera = Camera(player.p.x, player.p.y)
   bullets = { }
-  dagger = love.graphics.newImage("dagger.png")
-  enemy = love.graphics.newImage("enemy.png")
+  dagger = love.graphics.newImage("images/dagger.png")
+  enemy = love.graphics.newImage("images/enemy.png")
 end
 love.update = function(dt)
+  Timer.update(dt)
   STATE:update(dt)
   if player.p.lives > 0 then
     map:update(dt)
@@ -557,10 +527,9 @@ love.draw = function()
     love.graphics.setColor(255, 0, 0, score)
     love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
     love.graphics.setColor(255, 255, 255, 255)
-    love.graphics.print("Lives: " .. player.p.lives, 12, 12)
-    return love.graphics.print("Score: " .. score, 100, 12)
+    return love.graphics.print("Lives: " .. player.p.lives, 12, 12)
   else
-    love.graphics.setFont(love.graphics.newFont("kenpixel.ttf", 30))
+    love.graphics.setFont(love.graphics.newFont("lib/kenpixel.ttf", 30))
     love.graphics.print("GAME OVER MACBETH!", love.graphics.getWidth() / 4, love.graphics.getHeight() / 2)
     love.graphics.print("Score: " .. score, love.graphics.getWidth() / 4, love.graphics.getHeight() / 1.5)
     return love.graphics.print("Hit enter to play again ", love.graphics.getWidth() / 4, love.graphics.getHeight() / 1.2)
