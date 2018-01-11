@@ -1,9 +1,9 @@
 assert(love.filesystem.load("lib/lib.lua"))()
-local sinceFire = 0
-local score = 0
-local enemies = { }
-local isDialogue = false
-local Dagger
+require("scenes/kitefight")
+sinceFire = 0
+score = 0
+enemies = { }
+isDialogue = false
 do
   local _class_0
   local _parent_0 = Entity
@@ -54,7 +54,6 @@ do
   end
   Dagger = _class_0
 end
-local Enemy
 do
   local _class_0
   local _parent_0 = Entity
@@ -117,57 +116,6 @@ do
   end
   Enemy = _class_0
 end
-local Macduff
-do
-  local _class_0
-  local _parent_0 = Entity
-  local _base_0 = {
-    update = function(self, dt)
-      self.p.speed = self.p.speed + dt
-      _class_0.__parent.follow(self, player)
-      _class_0.__parent.__base.update(self, dt)
-      if collision(self.p, 64, 64, player.p, 64, 64) then
-        player.p.lives = 0
-      end
-    end,
-    draw = function(self)
-      return love.graphics.draw(self.p.image, self.p.x, self.p.y, 0, 4, 4)
-    end
-  }
-  _base_0.__index = _base_0
-  setmetatable(_base_0, _parent_0.__base)
-  _class_0 = setmetatable({
-    __init = function(self, ...)
-      return _class_0.__parent.__init(self, ...)
-    end,
-    __base = _base_0,
-    __name = "Macduff",
-    __parent = _parent_0
-  }, {
-    __index = function(cls, name)
-      local val = rawget(_base_0, name)
-      if val == nil then
-        local parent = rawget(cls, "__parent")
-        if parent then
-          return parent[name]
-        end
-      else
-        return val
-      end
-    end,
-    __call = function(cls, ...)
-      local _self_0 = setmetatable({}, _base_0)
-      cls.__init(_self_0, ...)
-      return _self_0
-    end
-  })
-  _base_0.__class = _class_0
-  if _parent_0.__inherited then
-    _parent_0.__inherited(_parent_0, _class_0)
-  end
-  Macduff = _class_0
-end
-local Player
 do
   local _class_0
   local _parent_0 = Entity
@@ -234,128 +182,13 @@ do
   end
   Player = _class_0
 end
-local BaseState
-do
-  local _class_0
-  local _base_0 = {
-    draw = function(self)
-      map:draw()
-      for i, v in ipairs(bullets) do
-        v:draw()
-      end
-      return player:draw()
-    end
-  }
-  _base_0.__index = _base_0
-  _class_0 = setmetatable({
-    __init = function(self)
-      map:bump_init(world)
-      return world:add(player, player.p.x + 8, player.p.y + 8, 48, 48)
-    end,
-    __base = _base_0,
-    __name = "BaseState"
-  }, {
-    __index = _base_0,
-    __call = function(cls, ...)
-      local _self_0 = setmetatable({}, _base_0)
-      cls.__init(_self_0, ...)
-      return _self_0
-    end
-  })
-  _base_0.__class = _class_0
-  BaseState = _class_0
-end
-local MainGame
-do
-  local _class_0
-  local _parent_0 = BaseState
-  local _base_0 = {
-    update = function(self, dt)
-      if score > 100 then
-        macduff:update(dt)
-      end
-      for i = #enemies, 1, -1 do
-        enemies[i]:update(dt, i)
-      end
-      player:update(dt)
-      if love.keyboard.isDown("return") then
-        STATE = MainGame()
-      end
-    end,
-    draw = function(self)
-      _class_0.__parent.__base.draw(self)
-      for i, v in ipairs(enemies) do
-        v:draw()
-      end
-    end
-  }
-  _base_0.__index = _base_0
-  setmetatable(_base_0, _parent_0.__base)
-  _class_0 = setmetatable({
-    __init = function(self)
-      world = bump.newWorld()
-      map = sti("data/testmap.lua", {
-        "bump"
-      })
-      player.p.x, player.p.y, player.p.lives, score = 43 * 64, 4 * 64, 5, 0
-      _class_0.__parent.__init(self)
-      do
-        local _accum_0 = { }
-        local _len_0 = 1
-        for i = 1, 40 do
-          _accum_0[_len_0] = Enemy({
-            x = random(64 * (2), (32) * 64),
-            y = random(64 * (2), (map.height - 2) * 64),
-            lives = 5,
-            isEnemy = true,
-            speed = 30
-          })
-          _len_0 = _len_0 + 1
-        end
-        enemies = _accum_0
-      end
-      macduff = Macduff({
-        x = 128,
-        y = 20 * 64,
-        speed = 90,
-        image = love.graphics.newImage("images/macduff.png")
-      })
-    end,
-    __base = _base_0,
-    __name = "MainGame",
-    __parent = _parent_0
-  }, {
-    __index = function(cls, name)
-      local val = rawget(_base_0, name)
-      if val == nil then
-        local parent = rawget(cls, "__parent")
-        if parent then
-          return parent[name]
-        end
-      else
-        return val
-      end
-    end,
-    __call = function(cls, ...)
-      local _self_0 = setmetatable({}, _base_0)
-      cls.__init(_self_0, ...)
-      return _self_0
-    end
-  })
-  _base_0.__class = _class_0
-  if _parent_0.__inherited then
-    _parent_0.__inherited(_parent_0, _class_0)
-  end
-  MainGame = _class_0
-end
-local BeforeFight
 do
   local _class_0
   local _parent_0 = BaseState
   local _base_0 = {
     update = function(self, dt)
       if collision(player.p, 64, 64, tile(9, 24), 128, 64) then
-        STATE = MainGame()
+        STATE = KiteFight()
       end
       return player:update(dt)
     end,
@@ -420,7 +253,6 @@ do
   end
   BeforeFight = _class_0
 end
-local Castle
 do
   local _class_0
   local _parent_0 = BaseState
@@ -496,7 +328,7 @@ love.load = function()
     lives = 5,
     image = love.graphics.newImage("Oedipus.png")
   })
-  STATE = Castle()
+  STATE = KiteFight()
   camera = Camera(player.p.x, player.p.y)
   bullets = { }
   dagger = love.graphics.newImage("images/dagger.png")
@@ -521,9 +353,6 @@ love.draw = function()
   if player.p.lives > 0 then
     camera:attach()
     STATE:draw()
-    if score > 110 then
-      macduff:draw()
-    end
     camera:detach()
     love.graphics.setColor(255, 0, 0, score)
     love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())

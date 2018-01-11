@@ -1,4 +1,6 @@
 assert(love.filesystem.load("lib/lib.lua"))!
+require("scenes/kitefight")
+export *
 sinceFire = 0
 score = 0
 enemies = {}
@@ -28,14 +30,6 @@ class Enemy extends Entity
 				world\remove(self)
 				score += 5
 				table.remove(enemies, i)
-class Macduff extends Entity
-	update: (dt) =>
-		@p.speed += dt
-		super\follow(player)
-		super dt
-		if collision(@p, 64, 64, player.p, 64, 64)
-			player.p.lives = 0
-	draw: => love.graphics.draw(@p.image, @p.x, @p.y,0, 4, 4)
 class Player extends Entity	
 	new: (p) =>
 		@p = p
@@ -53,30 +47,7 @@ class Player extends Entity
 					@p.lives -= 1
 					table.remove(enemies, i)
 --States--
-class BaseState
-	new: =>
-		map\bump_init(world)
-		world\add(player, player.p.x + 8, player.p.y + 8, 48, 48)
-	draw: =>
-		map\draw()
-		for i,v in ipairs(bullets) do v\draw!
-		player\draw!
-class MainGame extends BaseState
-	new: =>
-		export world = bump.newWorld!
-		export map = sti("data/testmap.lua", {"bump"})
-		player.p.x, player.p.y, player.p.lives, score = 43*64, 4*64, 5, 0
-		super!
-		export enemies = for i = 1, 40 do Enemy x: random(64*(2), (32)*64), y: random(64*(2), (map.height-2)*64), lives: 5, isEnemy: true, speed: 30
-		export macduff =  Macduff x:128, y: 20*64, speed: 90, image: love.graphics.newImage("images/macduff.png")
-	update: (dt) =>
-		if score > 100 then macduff\update(dt)		
-		for i=#enemies,1,-1 do enemies[i]\update(dt,i)
-		player\update(dt)
-		if love.keyboard.isDown("return") then export STATE = MainGame!
-	draw: =>
-		super!
-		for i,v in ipairs(enemies) do v\draw!
+
 class BeforeFight extends BaseState
 	new: =>
 		export world = bump.newWorld!
@@ -90,7 +61,7 @@ class BeforeFight extends BaseState
 		Moan.speak("Messenger", {"Soldiers sir"}, {oncomplete: ()-> isDialogue = false})
 		@messenger = love.graphics.newImage("images/messenger.png")
 	update: (dt) =>
-		if collision(player.p, 64, 64, tile(9, 24), 128, 64) then export STATE = MainGame!
+		if collision(player.p, 64, 64, tile(9, 24), 128, 64) then export STATE = KiteFight!
 		player\update(dt)
 	draw: (dt) =>
 		super!
@@ -120,7 +91,7 @@ class Castle extends BaseState
 --Actual Game--
 love.load = ->	
 	export player = Player x: 43*64, y: 6*64, w: 64, h: 64, speed: 400, lives: 5, image: love.graphics.newImage("Oedipus.png")
-	export STATE = Castle!
+	export STATE = KiteFight!
 	export camera = Camera(player.p.x, player.p.y)
 	export bullets = {}
 	export dagger = love.graphics.newImage("images/dagger.png")
@@ -139,7 +110,6 @@ love.draw = ->
 	if player.p.lives > 0
 		camera\attach!
 		STATE\draw!
-		if score > 110 then macduff\draw!
 		--map\bump_draw(world) --this is the debug code for seeing collision boxes
 		camera\detach!
 		love.graphics.setColor(255, 0, 0, score)
@@ -161,5 +131,4 @@ love.mousepressed = (x, y, button) ->
 		angle = math.atan2((mouseY - startY), (mouseX - startX))
 		dx, dy = 250 * math.cos(angle), 250 * math.sin(angle)
 		table.insert(bullets, Dagger x: startX, y: startY, :dx, :dy, :angle, distance: 0)
-love.keyreleased = (key) ->
-    Moan.keyreleased(key)
+love.keyreleased = (key) -> Moan.keyreleased(key)

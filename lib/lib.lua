@@ -2,11 +2,10 @@ sti = require("lib/sti")
 Camera = require("lib/camera")
 bump = require('lib/bump')
 Timer = require('lib/timer')
-Timer = require('lib/Moan')
+Moan = require('lib/Moan')
 anim8 = require('lib/anim8')
 kenPixel = love.graphics.newFont("lib/kenpixel.ttf", 18)
 love.graphics.setDefaultFilter("nearest")
-love.window.setFullscreen(true)
 Moan.font = kenPixel
 Moan.selectButton = "return"
 random = function(l, h)
@@ -57,5 +56,35 @@ do
   })
   _base_0.__class = _class_0
   Entity = _class_0
+end
+do
+  local _class_0
+  local _base_0 = {
+    draw = function(self)
+      map:draw()
+      for i, v in ipairs(bullets) do
+        v:draw()
+      end
+      return player:draw()
+    end
+  }
+  _base_0.__index = _base_0
+  _class_0 = setmetatable({
+    __init = function(self)
+      map:bump_init(world)
+      return world:add(player, player.p.x + 8, player.p.y + 8, 48, 48)
+    end,
+    __base = _base_0,
+    __name = "BaseState"
+  }, {
+    __index = _base_0,
+    __call = function(cls, ...)
+      local _self_0 = setmetatable({}, _base_0)
+      cls.__init(_self_0, ...)
+      return _self_0
+    end
+  })
+  _base_0.__class = _class_0
+  BaseState = _class_0
   return _class_0
 end

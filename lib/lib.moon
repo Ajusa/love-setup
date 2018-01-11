@@ -3,11 +3,11 @@ sti = require("lib/sti")
 Camera = require("lib/camera")
 bump = require('lib/bump')
 Timer = require('lib/timer')
-Timer = require('lib/Moan')
+Moan = require('lib/Moan')
 anim8 = require('lib/anim8')
 kenPixel = love.graphics.newFont("lib/kenpixel.ttf", 18)
 love.graphics.setDefaultFilter("nearest")
-love.window.setFullscreen(true)
+--love.window.setFullscreen(true)
 Moan.font = kenPixel
 Moan.selectButton = "return"
 random = (l, h) -> love.math.random(l, h)
@@ -21,5 +21,14 @@ class Entity
   follow: (obj) => 
   	angle = math.atan2((obj.p.y - @p.y), (obj.p.x - @p.x))
   	@p.dx, @p.dy  = @p.speed * math.cos(angle), @p.speed * math.sin(angle)
+
+class BaseState
+	new: =>
+		map\bump_init(world)
+		world\add(player, player.p.x + 8, player.p.y + 8, 48, 48)
+	draw: =>
+		map\draw()
+		for i,v in ipairs(bullets) do v\draw!
+		player\draw!
 
 --could add move up methods here, to assist with cutscene stuff
