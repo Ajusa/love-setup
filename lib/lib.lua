@@ -6,6 +6,7 @@ Timer = require('lib/Moan')
 love.graphics.setFont(love.graphics.newFont("lib/kenpixel.ttf", 16))
 love.graphics.setDefaultFilter("nearest")
 Moan.font = love.graphics.newFont("lib/kenpixel.ttf", 16)
+Moan.selectButton = "return"
 random = function(l, h)
   return love.math.random(l, h)
 end
