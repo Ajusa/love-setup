@@ -3,12 +3,18 @@ Camera = require("lib/camera")
 bump = require('lib/bump')
 Timer = require('lib/timer')
 Timer = require('lib/Moan')
-love.graphics.setFont(love.graphics.newFont("lib/kenpixel.ttf", 16))
+kenPixel = love.graphics.newFont("lib/kenpixel.ttf", 18)
 love.graphics.setDefaultFilter("nearest")
-Moan.font = love.graphics.newFont("lib/kenpixel.ttf", 16)
+Moan.font = kenPixel
 Moan.selectButton = "return"
 random = function(l, h)
   return love.math.random(l, h)
+end
+tile = function(x, y)
+  return {
+    x = x * 64,
+    y = y * 64
+  }
 end
 fullCollision = function(x1, y1, w1, h1, x2, y2, w2, h2)
   return x1 < x2 + w2 and x2 < x1 + w1 and y1 < y2 + h2 and y2 < y1 + h1

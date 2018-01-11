@@ -1,7 +1,9 @@
 assert(love.filesystem.load("lib/lib.lua"))()
+love.window.setFullscreen(true)
 local sinceFire = 0
 local score = 0
 local enemies = { }
+local isDialogue = false
 local Dagger
 do
   local _class_0
@@ -125,7 +127,7 @@ do
       self.p.speed = self.p.speed + dt
       _class_0.__parent.follow(self, player)
       _class_0.__parent.__base.update(self, dt)
-      if fullCollision(self.p.x, self.p.y, 64, 64, player.p.x, player.p.y, 64, 64) then
+      if collision(self.p, 64, 64, player.p, 64, 64) then
         player.p.lives = 0
       end
     end,
@@ -350,7 +352,7 @@ do
   local _parent_0 = BaseState
   local _base_0 = {
     update = function(self, dt)
-      if fullCollision(player.p.x, player.p.y, 64, 64, 9 * 64, 24 * 64, 128, 64) then
+      if collision(player.p, 64, 64, tile(9, 24), 128, 64) then
         STATE = MainGame()
       end
       return player:update(dt)
@@ -370,13 +372,24 @@ do
       })
       player.p.x, player.p.y = (10) * 64, (3) * 64
       _class_0.__parent.__init(self)
-      local line = love.audio.newSource("sound/beforegame.ogg")
-      line:play()
+      isDialogue = true
+      Moan.speak("Duncan", {
+        "The Devil dam thee black, thou cream faced loon! Why gottest thou that goose face?"
+      })
+      Moan.speak("Messenger", {
+        "There are ten thousand-"
+      })
+      Moan.speak("Duncan", {
+        "GEESE villian?"
+      })
+      Moan.speak("Messenger", {
+        "Soldiers sir"
+      }, {
+        oncomplete = function()
+          isDialogue = false
+        end
+      })
       self.messenger = love.graphics.newImage("images/messenger.png")
-      player.p.disabled = true
-      return Timer.after(2, function()
-        player.p.disabled = false
-      end)
     end,
     __base = _base_0,
     __name = "BeforeFight",
@@ -413,20 +426,17 @@ do
     update = function(self, dt)
       player:update(dt)
       for i, v in ipairs(bullets) do
-        if fullCollision(v.p.x, v.p.y, 20, 40, 10 * 64, 3 * 64, 64, 64) then
+        if collision(v.p, 20, 40, tile(10, 3), 64, 64) then
+          isDialogue = true
+          self.duncan = love.graphics.newImage("images/duncandead.png")
           Moan.speak("Narrator", {
             "Macbeth becomes king, and soon Malcolm is leading an army against him."
           }, {
-            onstart = function()
-              player.p.disabled = true, {
-                oncomplete = function()
-                  player.p.disabled = false
-                  STATE = BeforeFight()
-                end
-              }
+            oncomplete = function()
+              STATE = BeforeFight()
+              isDialogue = false
             end
           })
-          self.duncan = love.graphics.newImage("images/duncandead.png")
         end
       end
     end,
@@ -493,7 +503,9 @@ end
 love.update = function(dt)
   Moan.update(dt)
   Timer.update(dt)
-  STATE:update(dt)
+  if not isDialogue then
+    STATE:update(dt)
+  end
   if player.p.lives > 0 then
     map:update(dt)
     sinceFire = sinceFire + dt
@@ -514,6 +526,7 @@ love.draw = function()
     love.graphics.setColor(255, 0, 0, score)
     love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
     love.graphics.setColor(255, 255, 255, 255)
+    love.graphics.setFont(kenPixel)
     love.graphics.print("Lives: " .. player.p.lives, 12, 12)
     return Moan.draw()
   else
@@ -524,7 +537,7 @@ love.draw = function()
   end
 end
 love.mousepressed = function(x, y, button)
-  if button == 1 and sinceFire > .3 and not player.p.disabled then
+  if button == 1 and sinceFire > .3 and not isDialogue then
     sinceFire = 0
     local startX, startY = player.p.x + 32, player.p.y + 32
     local mouseX, mouseY = camera:worldCoords(x, y)

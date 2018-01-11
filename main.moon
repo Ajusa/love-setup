@@ -1,8 +1,9 @@
 assert(love.filesystem.load("lib/lib.lua"))!
---love.window.setFullscreen(true)
+love.window.setFullscreen(true)
 sinceFire = 0
 score = 0
 enemies = {}
+isDialogue = false
 --Classes--
 class Dagger extends Entity
 	draw: => love.graphics.draw(dagger, @p.x, @p.y, @p.angle)
@@ -33,7 +34,7 @@ class Macduff extends Entity
 		@p.speed += dt
 		super\follow(player)
 		super dt
-		if fullCollision(@p.x, @p.y, 64, 64, player.p.x, player.p.y, 64, 64)
+		if collision(@p, 64, 64, player.p, 64, 64)
 			player.p.lives = 0
 	draw: => love.graphics.draw(@p.image, @p.x, @p.y,0, 4, 4)
 class Player extends Entity		
@@ -78,14 +79,14 @@ class BeforeFight extends BaseState
 		export map = sti("data/castle.lua", {"bump"})
 		player.p.x, player.p.y = (10)*64, (3)*64
 		super!
-		line = love.audio.newSource("sound/beforegame.ogg")
-		line\play!
+		isDialogue = true
+		Moan.speak("Duncan", {"The Devil dam thee black, thou cream faced loon! Why gottest thou that goose face?"}) 
+		Moan.speak("Messenger", {"There are ten thousand-"}) 
+		Moan.speak("Duncan", {"GEESE villian?"})
+		Moan.speak("Messenger", {"Soldiers sir"}, {oncomplete: ()-> isDialogue = false})
 		@messenger = love.graphics.newImage("images/messenger.png")
-		player.p.disabled = true
-		--line\getDuration!
-		Timer.after(2, () -> player.p.disabled = false)
 	update: (dt) =>
-		if fullCollision(player.p.x, player.p.y, 64, 64, 9*64, 24*64, 128, 64) then export STATE = MainGame!
+		if collision(player.p, 64, 64, tile(9, 24), 128, 64) then export STATE = MainGame!
 		player\update(dt)
 	draw: (dt) =>
 		super!
@@ -100,13 +101,14 @@ class Castle extends BaseState
 	update: (dt) => 
 		player\update(dt)
 		for i,v in ipairs(bullets)
-			if fullCollision(v.p.x, v.p.y, 20, 40, 10*64, 3*64, 64, 64)
-				Moan.speak("Narrator", {"Macbeth becomes king, and soon Malcolm is leading an army against him."}, 
-					{onstart: ()-> player.p.disabled = true, oncomplete: ()-> 
-						player.p.disabled = false
-						export STATE = BeforeFight!
-					 })
+			if collision(v.p, 20, 40, tile(10,3), 64, 64)
+				isDialogue = true
 				@duncan = love.graphics.newImage("images/duncandead.png")
+				Moan.speak("Narrator", {"Macbeth becomes king, and soon Malcolm is leading an army against him."}, 
+					{oncomplete: ()-> 
+						export STATE = BeforeFight!
+						isDialogue = false
+					})
 	draw: =>
 		super!
 		love.graphics.draw(@duncan, 10*64, 3*64, 0,4,4)
@@ -122,11 +124,10 @@ love.load = ->
 love.update = (dt) ->
 	Moan.update(dt)
 	Timer.update(dt)
-	STATE\update(dt)
+	if not isDialogue then STATE\update(dt)
 	if player.p.lives > 0
 		-- Update world
 		map\update(dt)
-		
 		sinceFire += dt
 		for i=#bullets,1,-1 do bullets[i]\update(dt,i)
 		camera\lockPosition(player.p.x, player.p.y)
@@ -140,6 +141,7 @@ love.draw = ->
 		love.graphics.setColor(255, 0, 0, score)
 		love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth!, love.graphics.getHeight!)
 		love.graphics.setColor(255, 255, 255, 255)
+		love.graphics.setFont(kenPixel)
 		love.graphics.print("Lives: "..player.p.lives, 12, 12)
 		Moan.draw!
 	else 
@@ -148,7 +150,7 @@ love.draw = ->
 		love.graphics.print("Score: ".. score, love.graphics.getWidth!/4, love.graphics.getHeight!/1.5)
 		love.graphics.print("Hit enter to play again ", love.graphics.getWidth!/4, love.graphics.getHeight!/1.2)
 love.mousepressed = (x, y, button) ->
-	if button == 1 and sinceFire > .3 and not player.p.disabled
+	if button == 1 and sinceFire > .3 and not isDialogue
 		sinceFire = 0
 		startX, startY = player.p.x + 32, player.p.y + 32
 		mouseX, mouseY = camera\worldCoords(x,y) --this stops the mouse coords from being off from the real coors, cause we have a camera
