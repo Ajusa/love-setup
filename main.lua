@@ -1,5 +1,4 @@
 assert(love.filesystem.load("lib/lib.lua"))()
-love.window.setFullscreen(true)
 local sinceFire = 0
 local score = 0
 local enemies = { }
