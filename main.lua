@@ -174,10 +174,11 @@ do
   local _parent_0 = Entity
   local _base_0 = {
     draw = function(self)
-      return love.graphics.draw(self.p.image, self.p.x, self.p.y, 0, 4, 4)
+      return self.p.anim:draw(self.p.image, self.p.x, self.p.y, 0, 4, 4)
     end,
     update = function(self, dt)
       if not self.p.disabled then
+        self.p.anim:update(dt)
         if love.keyboard.isDown("a") then
           self.p.x, self.p.y = world:move(self, self.p.x - self.p.speed * dt, self.p.y, walls)
         end
@@ -202,8 +203,10 @@ do
   _base_0.__index = _base_0
   setmetatable(_base_0, _parent_0.__base)
   _class_0 = setmetatable({
-    __init = function(self, ...)
-      return _class_0.__parent.__init(self, ...)
+    __init = function(self, p)
+      self.p = p
+      local g = anim8.newGrid(16, 16, self.p.image:getWidth(), self.p.image:getHeight())
+      self.p.anim = anim8.newAnimation(g('1-3', 1, '1-3', 2, 1, 3), 0.1)
     end,
     __base = _base_0,
     __name = "Player",
@@ -492,7 +495,7 @@ love.load = function()
     h = 64,
     speed = 400,
     lives = 5,
-    image = love.graphics.newImage("images/player.png")
+    image = love.graphics.newImage("Oedipus.png")
   })
   STATE = Castle()
   camera = Camera(player.p.x, player.p.y)

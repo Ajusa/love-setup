@@ -37,10 +37,15 @@ class Macduff extends Entity
 		if collision(@p, 64, 64, player.p, 64, 64)
 			player.p.lives = 0
 	draw: => love.graphics.draw(@p.image, @p.x, @p.y,0, 4, 4)
-class Player extends Entity		
-	draw: => love.graphics.draw(@p.image, @p.x, @p.y, 0,4,4)
+class Player extends Entity	
+	new: (p) =>
+		@p = p
+		g = anim8.newGrid(16, 16, @p.image\getWidth!, @p.image\getHeight!)
+		@p.anim = anim8.newAnimation(g('1-3',1, '1-3',2, 1,3), 0.1)
+	draw: => @p.anim\draw(@p.image, @p.x, @p.y, 0,4,4)
 	update: (dt) =>
 		if not @p.disabled
+			@p.anim\update(dt)
 			if love.keyboard.isDown("a") then @p.x, @p.y = world\move(self, @p.x - @p.speed*dt,@p.y, walls)
 			if love.keyboard.isDown("d") then @p.x, @p.y = world\move(self, @p.x + @p.speed*dt,@p.y, walls)
 			if love.keyboard.isDown("w") then @p.x, @p.y = world\move(self, @p.x, @p.y - @p.speed*dt, walls)
@@ -115,7 +120,7 @@ class Castle extends BaseState
 		
 --Actual Game--
 love.load = ->	
-	export player = Player x: 43*64, y: 6*64, w: 64, h: 64, speed: 400, lives: 5, image: love.graphics.newImage("images/player.png")
+	export player = Player x: 43*64, y: 6*64, w: 64, h: 64, speed: 400, lives: 5, image: love.graphics.newImage("Oedipus.png")
 	export STATE = Castle!
 	export camera = Camera(player.p.x, player.p.y)
 	export bullets = {}

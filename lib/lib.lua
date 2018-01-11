@@ -3,6 +3,7 @@ Camera = require("lib/camera")
 bump = require('lib/bump')
 Timer = require('lib/timer')
 Timer = require('lib/Moan')
+anim8 = require('lib/anim8')
 kenPixel = love.graphics.newFont("lib/kenpixel.ttf", 18)
 love.graphics.setDefaultFilter("nearest")
 Moan.font = kenPixel
