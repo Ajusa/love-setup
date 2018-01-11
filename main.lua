@@ -63,11 +63,11 @@ do
     end,
     update = function(self, dt, i)
       self.p.speed = self.p.speed + dt
-      local angle = math.atan2((player.p.y - self.p.y), (player.p.x - self.p.x))
-      self.p.dx, self.p.dy = self.p.speed * math.cos(angle), self.p.speed * math.sin(angle)
-      self.p.x, self.p.y = world:move(self, self.p.x + self.p.dx * dt, self.p.y + self.p.dy * dt, walls)
+      _class_0.__parent.follow(self, player)
+      _class_0.__parent.__base.update(self, dt)
+      self.p.x, self.p.y = world:move(self, self.p.x, self.p.y, walls)
       for i = #bullets, 1, -1 do
-        if collision(bullets[i].p.x, bullets[i].p.y, 20, 40, self.p.x, self.p.y, 64, 64) then
+        if collision(bullets[i].p, 20, 40, self.p, 64, 64) then
           self.p.lives = self.p.lives - 1
           score = score + 1
           table.remove(bullets, i)
@@ -123,10 +123,9 @@ do
   local _base_0 = {
     update = function(self, dt)
       self.p.speed = self.p.speed + dt
-      local angle = math.atan2((player.p.y - self.p.y), (player.p.x - self.p.x))
-      self.p.dx, self.p.dy = self.p.speed * math.cos(angle), self.p.speed * math.sin(angle)
+      _class_0.__parent.follow(self, player)
       _class_0.__parent.__base.update(self, dt)
-      if collision(self.p.x, self.p.y, 64, 64, player.p.x, player.p.y, 64, 64) then
+      if fullCollision(self.p.x, self.p.y, 64, 64, player.p.x, player.p.y, 64, 64) then
         player.p.lives = 0
       end
     end,
@@ -190,7 +189,7 @@ do
           self.p.x, self.p.y = world:move(self, self.p.x, self.p.y + self.p.speed * dt, walls)
         end
         for i = #enemies, 1, -1 do
-          if collision(enemies[i].p.x + 8, enemies[i].p.y + 8, 48, 48, self.p.x, self.p.y, 64, 64) then
+          if fullCollision(enemies[i].p.x + 8, enemies[i].p.y + 8, 48, 48, self.p.x, self.p.y, 64, 64) then
             self.p.lives = self.p.lives - 1
             table.remove(enemies, i)
           end
@@ -351,7 +350,7 @@ do
   local _parent_0 = BaseState
   local _base_0 = {
     update = function(self, dt)
-      if collision(player.p.x, player.p.y, 64, 64, 9 * 64, 24 * 64, 128, 64) then
+      if fullCollision(player.p.x, player.p.y, 64, 64, 9 * 64, 24 * 64, 128, 64) then
         STATE = MainGame()
       end
       return player:update(dt)
@@ -375,7 +374,7 @@ do
       line:play()
       self.messenger = love.graphics.newImage("images/messenger.png")
       player.p.disabled = true
-      return Timer.after(line:getDuration(), function()
+      return Timer.after(2, function()
         player.p.disabled = false
       end)
     end,
@@ -414,7 +413,7 @@ do
     update = function(self, dt)
       player:update(dt)
       for i, v in ipairs(bullets) do
-        if collision(v.p.x, v.p.y, 20, 40, 10 * 64, 3 * 64, 64, 64) then
+        if fullCollision(v.p.x, v.p.y, 20, 40, 10 * 64, 3 * 64, 64, 64) then
           if love.window.showMessageBox("Narrator", "Macbeth becomes king, and soon Malcolm is leading an army against him.") then
             STATE = BeforeFight()
           end

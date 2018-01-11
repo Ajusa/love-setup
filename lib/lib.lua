@@ -7,8 +7,11 @@ love.graphics.setDefaultFilter("nearest")
 random = function(l, h)
   return love.math.random(l, h)
 end
-collision = function(x1, y1, w1, h1, x2, y2, w2, h2)
+fullCollision = function(x1, y1, w1, h1, x2, y2, w2, h2)
   return x1 < x2 + w2 and x2 < x1 + w1 and y1 < y2 + h2 and y2 < y1 + h1
+end
+collision = function(first, w1, h1, second, w2, h2)
+  return first.x < second.x + w2 and second.x < first.x + w1 and first.y < second.y + h2 and second.y < first.y + h1
 end
 walls = function(item, other)
   if other.p == nil then
@@ -20,6 +23,10 @@ do
   local _base_0 = {
     update = function(self, dt)
       self.p.x, self.p.y = self.p.x + self.p.dx * dt, self.p.y + self.p.dy * dt
+    end,
+    follow = function(self, obj)
+      local angle = math.atan2((obj.p.y - self.p.y), (obj.p.x - self.p.x))
+      self.p.dx, self.p.dy = self.p.speed * math.cos(angle), self.p.speed * math.sin(angle)
     end
   }
   _base_0.__index = _base_0
@@ -39,4 +46,5 @@ do
   })
   _base_0.__class = _class_0
   Entity = _class_0
+  return _class_0
 end

@@ -1,7 +1,5 @@
 assert(love.filesystem.load("lib/lib.lua"))!
 --love.window.setFullscreen(true)
-
-
 sinceFire = 0
 score = 0
 enemies = {}
@@ -19,10 +17,10 @@ class Enemy extends Entity
 	draw: => love.graphics.draw(enemy, @p.x, @p.y, 0,4,4)
 	update: (dt, i) =>
 		@p.speed += dt
-		angle = math.atan2((player.p.y - @p.y), (player.p.x - @p.x))
-		@p.dx, @p.dy  = @p.speed * math.cos(angle), @p.speed * math.sin(angle)
-		@p.x, @p.y = world\move(self,@p.x + @p.dx*dt, @p.y + @p.dy*dt, walls)
-		for i=#bullets,1,-1 do if collision(bullets[i].p.x, bullets[i].p.y, 20, 40, @p.x, @p.y, 64, 64) then
+		super\follow(player)
+		super dt
+		@p.x, @p.y = world\move(self,@p.x, @p.y, walls)
+		for i=#bullets,1,-1 do if collision(bullets[i].p, 20, 40, @p, 64, 64) then
 				@p.lives -= 1
 				score += 1
 				table.remove(bullets, i)
@@ -33,10 +31,9 @@ class Enemy extends Entity
 class Macduff extends Entity
 	update: (dt) =>
 		@p.speed += dt
-		angle = math.atan2((player.p.y - @p.y), (player.p.x - @p.x))
-		@p.dx, @p.dy = @p.speed * math.cos(angle), @p.speed * math.sin(angle)
+		super\follow(player)
 		super dt
-		if collision(@p.x, @p.y, 64, 64, player.p.x, player.p.y, 64, 64)
+		if fullCollision(@p.x, @p.y, 64, 64, player.p.x, player.p.y, 64, 64)
 			player.p.lives = 0
 	draw: => love.graphics.draw(@p.image, @p.x, @p.y,0, 4, 4)
 class Player extends Entity		
@@ -47,7 +44,7 @@ class Player extends Entity
 			if love.keyboard.isDown("d") then @p.x, @p.y = world\move(self, @p.x + @p.speed*dt,@p.y, walls)
 			if love.keyboard.isDown("w") then @p.x, @p.y = world\move(self, @p.x, @p.y - @p.speed*dt, walls)
 			if love.keyboard.isDown("s") then @p.x, @p.y = world\move(self, @p.x, @p.y + @p.speed*dt, walls)
-			for i=#enemies,1,-1 do if collision(enemies[i].p.x + 8, enemies[i].p.y + 8, 48, 48, @p.x, @p.y, 64, 64) -- the 8's are for a smaller hitbox
+			for i=#enemies,1,-1 do if fullCollision(enemies[i].p.x + 8, enemies[i].p.y + 8, 48, 48, @p.x, @p.y, 64, 64) -- the 8's are for a smaller hitbox
 					@p.lives -= 1
 					table.remove(enemies, i)
 --States--
@@ -85,9 +82,10 @@ class BeforeFight extends BaseState
 		line\play!
 		@messenger = love.graphics.newImage("images/messenger.png")
 		player.p.disabled = true
-		Timer.after(line\getDuration!, () -> player.p.disabled = false)
+		--line\getDuration!
+		Timer.after(2, () -> player.p.disabled = false)
 	update: (dt) =>
-		if collision(player.p.x, player.p.y, 64, 64, 9*64, 24*64, 128, 64) then export STATE = MainGame!
+		if fullCollision(player.p.x, player.p.y, 64, 64, 9*64, 24*64, 128, 64) then export STATE = MainGame!
 		player\update(dt)
 	draw: (dt) =>
 		super!
@@ -104,7 +102,7 @@ class Castle extends BaseState
 	update: (dt) => 
 		player\update(dt)
 		for i,v in ipairs(bullets)
-			if collision(v.p.x, v.p.y, 20, 40, 10*64, 3*64, 64, 64)
+			if fullCollision(v.p.x, v.p.y, 20, 40, 10*64, 3*64, 64, 64)
 				if love.window.showMessageBox("Narrator", "Macbeth becomes king, and soon Malcolm is leading an army against him.") 
 					export STATE = BeforeFight!
 				@duncan = love.graphics.newImage("images/duncandead.png")
