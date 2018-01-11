@@ -414,9 +414,18 @@ do
       player:update(dt)
       for i, v in ipairs(bullets) do
         if fullCollision(v.p.x, v.p.y, 20, 40, 10 * 64, 3 * 64, 64, 64) then
-          if love.window.showMessageBox("Narrator", "Macbeth becomes king, and soon Malcolm is leading an army against him.") then
-            STATE = BeforeFight()
-          end
+          Moan.speak("Narrator", {
+            "Macbeth becomes king, and soon Malcolm is leading an army against him."
+          }, {
+            onstart = function()
+              player.p.disabled = true, {
+                oncomplete = function()
+                  player.p.disabled = false
+                  STATE = BeforeFight()
+                end
+              }
+            end
+          })
           self.duncan = love.graphics.newImage("images/duncandead.png")
         end
       end
@@ -436,8 +445,6 @@ do
       })
       player.p.x, player.p.y = (17) * 64, (15) * 64
       self.duncan = love.graphics.newImage("images/duncan.png")
-      self.temp = false
-      self.time = 0
       return _class_0.__parent.__init(self)
     end,
     __base = _base_0,
@@ -484,6 +491,7 @@ love.load = function()
   enemy = love.graphics.newImage("images/enemy.png")
 end
 love.update = function(dt)
+  Moan.update(dt)
   Timer.update(dt)
   STATE:update(dt)
   if player.p.lives > 0 then
@@ -506,7 +514,8 @@ love.draw = function()
     love.graphics.setColor(255, 0, 0, score)
     love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
     love.graphics.setColor(255, 255, 255, 255)
-    return love.graphics.print("Lives: " .. player.p.lives, 12, 12)
+    love.graphics.print("Lives: " .. player.p.lives, 12, 12)
+    return Moan.draw()
   else
     love.graphics.setFont(love.graphics.newFont("lib/kenpixel.ttf", 30))
     love.graphics.print("GAME OVER MACBETH!", love.graphics.getWidth() / 4, love.graphics.getHeight() / 2)
@@ -530,4 +539,7 @@ love.mousepressed = function(x, y, button)
       distance = 0
     }))
   end
+end
+love.keyreleased = function(key)
+  return Moan.keyreleased(key)
 end

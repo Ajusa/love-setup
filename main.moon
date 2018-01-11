@@ -96,15 +96,16 @@ class Castle extends BaseState
 		export map = sti("data/castle.lua", {"bump"})
 		player.p.x, player.p.y = (17)*64, (15)*64
 		@duncan = love.graphics.newImage("images/duncan.png")
-		@temp = false
-		@time = 0
 		super!
 	update: (dt) => 
 		player\update(dt)
 		for i,v in ipairs(bullets)
 			if fullCollision(v.p.x, v.p.y, 20, 40, 10*64, 3*64, 64, 64)
-				if love.window.showMessageBox("Narrator", "Macbeth becomes king, and soon Malcolm is leading an army against him.") 
-					export STATE = BeforeFight!
+				Moan.speak("Narrator", {"Macbeth becomes king, and soon Malcolm is leading an army against him."}, 
+					{onstart: ()-> player.p.disabled = true, oncomplete: ()-> 
+						player.p.disabled = false
+						export STATE = BeforeFight!
+					 })
 				@duncan = love.graphics.newImage("images/duncandead.png")
 	draw: =>
 		super!
@@ -119,6 +120,7 @@ love.load = ->
 	export dagger = love.graphics.newImage("images/dagger.png")
 	export enemy = love.graphics.newImage("images/enemy.png")
 love.update = (dt) ->
+	Moan.update(dt)
 	Timer.update(dt)
 	STATE\update(dt)
 	if player.p.lives > 0
@@ -130,15 +132,16 @@ love.update = (dt) ->
 		camera\lockPosition(player.p.x, player.p.y)
 love.draw = ->
 	if player.p.lives > 0
-		camera\attach()
+		camera\attach!
 		STATE\draw!
 		if score > 110 then macduff\draw!
 		--map\bump_draw(world) --this is the debug code for seeing collision boxes
-		camera\detach()
+		camera\detach!
 		love.graphics.setColor(255, 0, 0, score)
 		love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth!, love.graphics.getHeight!)
 		love.graphics.setColor(255, 255, 255, 255)
 		love.graphics.print("Lives: "..player.p.lives, 12, 12)
+		Moan.draw!
 	else 
 		love.graphics.setFont(love.graphics.newFont("lib/kenpixel.ttf", 30))
 		love.graphics.print("GAME OVER MACBETH!", love.graphics.getWidth!/4, love.graphics.getHeight!/2)
@@ -152,3 +155,5 @@ love.mousepressed = (x, y, button) ->
 		angle = math.atan2((mouseY - startY), (mouseX - startX))
 		dx, dy = 250 * math.cos(angle), 250 * math.sin(angle)
 		table.insert(bullets, Dagger x: startX, y: startY, :dx, :dy, :angle, distance: 0)
+love.keyreleased = (key) ->
+    Moan.keyreleased(key)
