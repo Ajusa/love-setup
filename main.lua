@@ -191,11 +191,11 @@ love.load = function()
     lives = 5,
     image = love.graphics.newImage("images/Amir.png")
   })
-  STATE = CrossRoads()
   camera = Camera(player.p.x, player.p.y)
   bullets = { }
   dagger = love.graphics.newImage("images/dagger.png")
   cameraX, cameraY = camera:cameraCoords(player.p.x, player.p.y)
+  STATE = CrossRoads()
 end
 love.update = function(dt)
   Moan.update(dt)
@@ -222,6 +222,7 @@ love.draw = function()
     love.graphics.setColor(255, 255, 255, 255)
     love.graphics.setFont(kenPixel)
     love.graphics.print("Lives: " .. player.p.lives, 12, 12)
+    love.graphics.print("Score: " .. score, 130, 12)
     return Moan.draw()
   else
     love.graphics.setFont(love.graphics.newFont("lib/kenpixel.ttf", 30))

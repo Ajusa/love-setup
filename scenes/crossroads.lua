@@ -43,9 +43,9 @@ do
         "Who are you, blind traveller?"
       }, function()
         return self.oedipus:moveTo(tile(38, 49), function()
-          return self.oedipus:moveTo(tile(36, 48), function()
+          return self.oedipus:moveTo(tile(36, 45), function()
             return self.oedipus:speak("Oedipus", {
-              "I am Oedipus. -- I was a mighty king. Now I am lost soul."
+              "I am Oedipus. -- I was a mighty king. Now I am a lost soul."
             }, function()
               self.man:moveTo(tile(45, 47))
               return self.man:speak("Young Man", {

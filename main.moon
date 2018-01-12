@@ -51,11 +51,11 @@ class Player extends Entity
 --Actual Game--
 love.load = ->	
 	export player = Player x: 43*64, y: 6*64, w: 64, h: 64, speed: 200, lives: 5, image: love.graphics.newImage("images/Amir.png")
-	export STATE = CrossRoads!
 	export camera = Camera(player.p.x, player.p.y)
 	export bullets = {}
 	export dagger = love.graphics.newImage("images/dagger.png")
 	export cameraX,cameraY = camera\cameraCoords(player.p.x, player.p.y)
+	export STATE = CrossRoads!
 love.update = (dt) ->
 	Moan.update(dt)
 	Timer.update(dt)
@@ -77,6 +77,7 @@ love.draw = ->
 		love.graphics.setColor(255, 255, 255, 255)
 		love.graphics.setFont(kenPixel)
 		love.graphics.print("Lives: "..player.p.lives, 12, 12)
+		love.graphics.print("Score: "..score, 130, 12)
 		Moan.draw!
 	else 
 		love.graphics.setFont(love.graphics.newFont("lib/kenpixel.ttf", 30))
