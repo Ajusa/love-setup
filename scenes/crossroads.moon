@@ -2,10 +2,11 @@ export *
 class CrossRoads extends BaseState
 	new: =>
 		export world = bump.newWorld!
-		export isDialogue = true
 		export map = sti("data/castle.lua", {"bump"})
-		player.p.x, player.p.y, player.p.lives, score = 9*64, 6*64, 5, 0
+		export isDialogue = true
 		super!
+		player.p.x, player.p.y, player.p.lives, score = 9*64, 6*64, 5, 0
+		
 		@oedipus = Entity x: 7*64, y: 6*64, w: 64, h: 64, speed: 200, image: love.graphics.newImage("images/duncan.png")
 		@man = Entity x: 17*64, y: 7*64, w: 64, h: 64, speed: 200, image: love.graphics.newImage("images/messenger.png")
 		player\speak("Amir", {"Who are you, traveller?"}, -> 

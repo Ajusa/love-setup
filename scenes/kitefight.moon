@@ -2,14 +2,17 @@ export *
 class KiteFight extends BaseState
 	new: =>
 		export world = bump.newWorld!
-		export isDialogue = true
 		export map = sti("data/dark.lua", {"bump"})
+		export isDialogue = true
+		
 		player.p.x, player.p.y, player.p.lives, score = 43*64, 6*64, 5, 0
 		super!
 		export assef =  Assef x:43*64, y: 13*64, speed: 175, image: love.graphics.newImage("images/macduff.png")
 		Moan.speak("Amir", {"I decided to walk in"}, 
 		{oncomplete: -> 
+			export world = bump.newWorld!
 			export map = sti("data/testmap.lua", {"bump"})
+			super!
 			player\moveTo(tile(43, 10))
 			assef\moveTo(tile(47, 10), assef\talk)
 		})

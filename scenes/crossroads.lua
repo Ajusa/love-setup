@@ -16,13 +16,13 @@ do
   _class_0 = setmetatable({
     __init = function(self)
       world = bump.newWorld()
-      isDialogue = true
       map = sti("data/castle.lua", {
         "bump"
       })
+      isDialogue = true
+      _class_0.__parent.__init(self)
       local score
       player.p.x, player.p.y, player.p.lives, score = 9 * 64, 6 * 64, 5, 0
-      _class_0.__parent.__init(self)
       self.oedipus = Entity({
         x = 7 * 64,
         y = 6 * 64,

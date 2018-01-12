@@ -22,10 +22,10 @@ do
   _class_0 = setmetatable({
     __init = function(self)
       world = bump.newWorld()
-      isDialogue = true
       map = sti("data/dark.lua", {
         "bump"
       })
+      isDialogue = true
       local score
       player.p.x, player.p.y, player.p.lives, score = 43 * 64, 6 * 64, 5, 0
       _class_0.__parent.__init(self)
@@ -39,9 +39,11 @@ do
         "I decided to walk in"
       }, {
         oncomplete = function()
+          world = bump.newWorld()
           map = sti("data/testmap.lua", {
             "bump"
           })
+          _class_0.__parent.__init(self)
           player:moveTo(tile(43, 10))
           return assef:moveTo(tile(47, 10), (function()
             local _base_1 = assef

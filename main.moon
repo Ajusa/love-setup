@@ -92,7 +92,7 @@ class Castle extends BaseState
 --Actual Game--
 love.load = ->	
 	export player = Player x: 43*64, y: 6*64, w: 64, h: 64, speed: 200, lives: 5, image: love.graphics.newImage("Oedipus.png")
-	export STATE = CrossRoads!
+	export STATE = KiteFight!
 	export camera = Camera(player.p.x, player.p.y)
 	export bullets = {}
 	export dagger = love.graphics.newImage("images/dagger.png")

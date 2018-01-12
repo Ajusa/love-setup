@@ -329,7 +329,7 @@ love.load = function()
     lives = 5,
     image = love.graphics.newImage("Oedipus.png")
   })
-  STATE = CrossRoads()
+  STATE = KiteFight()
   camera = Camera(player.p.x, player.p.y)
   bullets = { }
   dagger = love.graphics.newImage("images/dagger.png")
