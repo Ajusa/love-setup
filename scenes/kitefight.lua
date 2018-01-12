@@ -21,23 +21,37 @@ do
   setmetatable(_base_0, _parent_0.__base)
   _class_0 = setmetatable({
     __init = function(self)
-      love.graphics.setColor(255, 255, 255, 255)
-      love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
       world = bump.newWorld()
-      map = sti("data/testmap.lua", {
+      isDialogue = true
+      map = sti("data/dark.lua", {
         "bump"
       })
-      isDialogue = true
       local score
       player.p.x, player.p.y, player.p.lives, score = 43 * 64, 6 * 64, 5, 0
       _class_0.__parent.__init(self)
       assef = Assef({
         x = 43 * 64,
-        y = 10 * 64,
-        speed = 4,
+        y = 13 * 64,
+        speed = 175,
         image = love.graphics.newImage("images/macduff.png")
       })
-      return assef:moveTo(tile(43, 6))
+      return Moan.speak("Amir", {
+        "I decided to walk in"
+      }, {
+        oncomplete = function()
+          map = sti("data/testmap.lua", {
+            "bump"
+          })
+          player:moveTo(tile(43, 10))
+          return assef:moveTo(tile(47, 10), (function()
+            local _base_1 = assef
+            local _fn_0 = _base_1.talk
+            return function(...)
+              return _fn_0(_base_1, ...)
+            end
+          end)())
+        end
+      })
     end,
     __base = _base_0,
     __name = "KiteFight",
@@ -70,15 +84,7 @@ do
   local _class_0
   local _parent_0 = Entity
   local _base_0 = {
-    draw = function(self)
-      return love.graphics.draw(self.p.image, self.p.x, self.p.y, 0, 4, 4)
-    end
-  }
-  _base_0.__index = _base_0
-  setmetatable(_base_0, _parent_0.__base)
-  _class_0 = setmetatable({
-    __init = function(self, p)
-      _class_0.__parent.__init(self, p)
+    talk = function(self)
       return Moan.speak("Assef", {
         "What, didn't recognize me?",
         "I never forget a face. You can do away with that now",
@@ -90,6 +96,13 @@ do
           assef = BossAssef(self.p)
         end
       })
+    end
+  }
+  _base_0.__index = _base_0
+  setmetatable(_base_0, _parent_0.__base)
+  _class_0 = setmetatable({
+    __init = function(self, p)
+      return _class_0.__parent.__init(self, p)
     end,
     __base = _base_0,
     __name = "Assef",
@@ -123,7 +136,6 @@ do
   local _parent_0 = Entity
   local _base_0 = {
     update = function(self, dt)
-      self.p.speed = self.p.speed + dt
       _class_0.__parent.follow(self, player)
       _class_0.__parent.__base.update(self, dt)
       if collision(self.p, 64, 64, player.p, 64, 64) then

@@ -34,15 +34,30 @@ do
     update = function(self, dt)
       self.p.x, self.p.y = self.p.x + self.p.dx * dt, self.p.y + self.p.dy * dt
     end,
-    moveTo = function(self, obj)
-      self.handle = Timer.every(.05, function()
+    draw = function(self)
+      return love.graphics.draw(self.p.image, self.p.x, self.p.y, 0, 4, 4)
+    end,
+    moveTo = function(self, obj, after)
+      if after == nil then
+        after = function() end
+      end
+      self.handle = Timer.every(.04, function()
         local angle = math.atan2((obj.y - self.p.y), (obj.x - self.p.x))
-        self.p.dx, self.p.dy = self.p.speed * math.cos(angle), self.p.speed * math.sin(angle)
+        self.p.dx, self.p.dy = self.p.speed / 20 * math.cos(angle), self.p.speed / 20 * math.sin(angle)
         self.p.x, self.p.y = self.p.x + self.p.dx, self.p.y + self.p.dy
         if math.abs(obj.y - self.p.y) + math.abs(obj.x - self.p.x) < 10 then
-          return Timer.cancel(self.handle)
+          Timer.cancel(self.handle)
+          return after()
         end
       end)
+    end,
+    speak = function(self, name, obj, after)
+      if after == nil then
+        after = function() end
+      end
+      return Moan.speak(name, obj, {
+        oncomplete = after
+      })
     end,
     follow = function(self, obj)
       local angle = math.atan2((obj.p.y - self.p.y), (obj.p.x - self.p.x))

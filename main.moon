@@ -1,5 +1,6 @@
 assert(love.filesystem.load("lib/lib.lua"))!
 require("scenes/kitefight")
+require("scenes/crossroads")
 export *
 sinceFire = 0
 score = 0
@@ -90,8 +91,8 @@ class Castle extends BaseState
 		
 --Actual Game--
 love.load = ->	
-	export player = Player x: 43*64, y: 6*64, w: 64, h: 64, speed: 400, lives: 5, image: love.graphics.newImage("Oedipus.png")
-	export STATE = KiteFight!
+	export player = Player x: 43*64, y: 6*64, w: 64, h: 64, speed: 200, lives: 5, image: love.graphics.newImage("Oedipus.png")
+	export STATE = CrossRoads!
 	export camera = Camera(player.p.x, player.p.y)
 	export bullets = {}
 	export dagger = love.graphics.newImage("images/dagger.png")
@@ -105,7 +106,7 @@ love.update = (dt) ->
 		map\update(dt)
 		sinceFire += dt
 		for i=#bullets,1,-1 do bullets[i]\update(dt,i)
-		camera\lockPosition(player.p.x, player.p.y)
+	camera\lockPosition(player.p.x, player.p.y)
 love.draw = ->
 	if player.p.lives > 0
 		camera\attach!

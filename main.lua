@@ -1,5 +1,6 @@
 assert(love.filesystem.load("lib/lib.lua"))()
 require("scenes/kitefight")
+require("scenes/crossroads")
 sinceFire = 0
 score = 0
 enemies = { }
@@ -324,11 +325,11 @@ love.load = function()
     y = 6 * 64,
     w = 64,
     h = 64,
-    speed = 400,
+    speed = 200,
     lives = 5,
     image = love.graphics.newImage("Oedipus.png")
   })
-  STATE = KiteFight()
+  STATE = CrossRoads()
   camera = Camera(player.p.x, player.p.y)
   bullets = { }
   dagger = love.graphics.newImage("images/dagger.png")
@@ -346,8 +347,8 @@ love.update = function(dt)
     for i = #bullets, 1, -1 do
       bullets[i]:update(dt, i)
     end
-    return camera:lockPosition(player.p.x, player.p.y)
   end
+  return camera:lockPosition(player.p.x, player.p.y)
 end
 love.draw = function()
   if player.p.lives > 0 then

@@ -1,15 +1,18 @@
 export * 
 class KiteFight extends BaseState
 	new: =>
-		love.graphics.setColor(255, 255, 255, 255)
-		love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth!, love.graphics.getHeight!)
 		export world = bump.newWorld!
-		export map = sti("data/testmap.lua", {"bump"})
 		export isDialogue = true
+		export map = sti("data/dark.lua", {"bump"})
 		player.p.x, player.p.y, player.p.lives, score = 43*64, 6*64, 5, 0
 		super!
-		export assef =  Assef x:43*64, y: 10*64, speed: 4, image: love.graphics.newImage("images/macduff.png")
-		assef\moveTo(tile(43, 6))
+		export assef =  Assef x:43*64, y: 13*64, speed: 175, image: love.graphics.newImage("images/macduff.png")
+		Moan.speak("Amir", {"I decided to walk in"}, 
+		{oncomplete: -> 
+			export map = sti("data/testmap.lua", {"bump"})
+			player\moveTo(tile(43, 10))
+			assef\moveTo(tile(47, 10), assef\talk)
+		})
 		--export enemies = for i = 1, 40 do Enemy x: random(64*(2), (32)*64), y: random(64*(2), (map.height-2)*64), lives: 5, isEnemy: true, speed: 30
 	update: (dt) =>
 		assef\update(dt)		
@@ -24,7 +27,7 @@ class KiteFight extends BaseState
 class Assef extends Entity
 	new:(p) =>
 		super p
-		
+	talk: =>
 		Moan.speak("Assef", {"What, didn't recognize me?",
 		 "I never forget a face. You can do away with that now"
 		 	"You can have the boy, of course. However, we still have something to settle, don't we?",
@@ -33,11 +36,10 @@ class Assef extends Entity
 				export isDialogue = false
 				export assef = BossAssef(@p)
 			})
-	draw: => love.graphics.draw(@p.image, @p.x, @p.y,0, 4, 4)
 
 class BossAssef extends Entity
 	update: (dt) =>
-		@p.speed += dt
+		--@p.speed += dt
 		super\follow(player)
 		super dt
 		if collision(@p, 64, 64, player.p, 64, 64)
