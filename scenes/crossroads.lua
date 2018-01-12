@@ -7,7 +7,8 @@ do
     end,
     draw = function(self)
       _class_0.__parent.__base.draw(self)
-      return self.oedipus:draw()
+      self.oedipus:draw()
+      return self.man:draw()
     end
   }
   _base_0.__index = _base_0
@@ -15,6 +16,7 @@ do
   _class_0 = setmetatable({
     __init = function(self)
       world = bump.newWorld()
+      isDialogue = true
       map = sti("data/castle.lua", {
         "bump"
       })
@@ -27,6 +29,14 @@ do
         w = 64,
         h = 64,
         speed = 200,
+        image = love.graphics.newImage("images/duncan.png")
+      })
+      self.man = Entity({
+        x = 17 * 64,
+        y = 7 * 64,
+        w = 64,
+        h = 64,
+        speed = 200,
         image = love.graphics.newImage("images/messenger.png")
       })
       return player:speak("Amir", {
@@ -36,7 +46,23 @@ do
           return self.oedipus:moveTo(tile(5, 6), function()
             return self.oedipus:speak("Oedipus", {
               "I am Oedipus. -- I was a mighty king. Now I am a blind man."
-            })
+            }, function()
+              self.man:moveTo(tile(10, 7))
+              return self.man:speak("Young Man", {
+                "Hey guys? What are all of you doing out here?"
+              }, function()
+                return self.oedipus:speak("Oedipus", {
+                  "Do any of you know stories?",
+                  "When you have been in the wilderness for so long, you start to long for something exciting"
+                }, function()
+                  return player:speak("Amir", {
+                    "Luckily for you, I am a prime storyteller. Let me tell you about my past..."
+                  }, function()
+                    STATE = KiteFight()
+                  end)
+                end)
+              end)
+            end)
           end)
         end)
       end)
