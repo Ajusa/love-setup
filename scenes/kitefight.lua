@@ -34,9 +34,10 @@ do
       assef = Assef({
         x = 43 * 64,
         y = 10 * 64,
-        speed = 90,
+        speed = 4,
         image = love.graphics.newImage("images/macduff.png")
       })
+      return assef:moveTo(tile(43, 6))
     end,
     __base = _base_0,
     __name = "KiteFight",

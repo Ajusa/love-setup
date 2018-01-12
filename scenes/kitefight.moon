@@ -8,7 +8,8 @@ class KiteFight extends BaseState
 		export isDialogue = true
 		player.p.x, player.p.y, player.p.lives, score = 43*64, 6*64, 5, 0
 		super!
-		export assef =  Assef x:43*64, y: 10*64, speed: 90, image: love.graphics.newImage("images/macduff.png")
+		export assef =  Assef x:43*64, y: 10*64, speed: 4, image: love.graphics.newImage("images/macduff.png")
+		assef\moveTo(tile(43, 6))
 		--export enemies = for i = 1, 40 do Enemy x: random(64*(2), (32)*64), y: random(64*(2), (map.height-2)*64), lives: 5, isEnemy: true, speed: 30
 	update: (dt) =>
 		assef\update(dt)		

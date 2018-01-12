@@ -34,6 +34,16 @@ do
     update = function(self, dt)
       self.p.x, self.p.y = self.p.x + self.p.dx * dt, self.p.y + self.p.dy * dt
     end,
+    moveTo = function(self, obj)
+      self.handle = Timer.every(.05, function()
+        local angle = math.atan2((obj.y - self.p.y), (obj.x - self.p.x))
+        self.p.dx, self.p.dy = self.p.speed * math.cos(angle), self.p.speed * math.sin(angle)
+        self.p.x, self.p.y = self.p.x + self.p.dx, self.p.y + self.p.dy
+        if math.abs(obj.y - self.p.y) + math.abs(obj.x - self.p.x) < 10 then
+          return Timer.cancel(self.handle)
+        end
+      end)
+    end,
     follow = function(self, obj)
       local angle = math.atan2((obj.p.y - self.p.y), (obj.p.x - self.p.x))
       self.p.dx, self.p.dy = self.p.speed * math.cos(angle), self.p.speed * math.sin(angle)

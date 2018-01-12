@@ -18,6 +18,13 @@ walls = (item, other) -> if other.p == nil then "slide"
 class Entity
   new: (p) => @p = p
   update: (dt) => @p.x, @p.y = @p.x + @p.dx*dt, @p.y + @p.dy*dt
+  moveTo: (obj) =>
+  	@handle = Timer.every(.05, () ->
+  		angle = math.atan2((obj.y - @p.y), (obj.x - @p.x))
+  		@p.dx, @p.dy  = @p.speed * math.cos(angle), @p.speed * math.sin(angle)
+  		@p.x, @p.y = @p.x + @p.dx, @p.y + @p.dy
+  		if math.abs(obj.y - @p.y) + math.abs(obj.x - @p.x) < 10 then Timer.cancel(@handle)
+  	)
   follow: (obj) => 
   	angle = math.atan2((obj.p.y - @p.y), (obj.p.x - @p.x))
   	@p.dx, @p.dy  = @p.speed * math.cos(angle), @p.speed * math.sin(angle)
