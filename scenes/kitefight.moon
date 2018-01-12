@@ -4,11 +4,10 @@ class KiteFight extends BaseState
 		export world = bump.newWorld!
 		export map = sti("data/dark.lua", {"bump"})
 		export isDialogue = true
-		
 		player.p.x, player.p.y, player.p.lives, score = 43*64, 6*64, 5, 0
 		super!
-		export assef =  Assef x:43*64, y: 13*64, speed: 175, image: love.graphics.newImage("images/macduff.png")
-		Moan.speak("Amir", {"I decided to walk in"}, 
+		export assef =  Assef x:43*64, y: 13*64, speed: 175, image: love.graphics.newImage("images/Assef.png")
+		Moan.speak("Amir", {"I decided to walk in to the building, hoping to find Sohrab"}, 
 		{oncomplete: -> 
 			export world = bump.newWorld!
 			export map = sti("data/testmap.lua", {"bump"})
@@ -16,16 +15,22 @@ class KiteFight extends BaseState
 			player\moveTo(tile(43, 10))
 			assef\moveTo(tile(47, 10), assef\talk)
 		})
-		--export enemies = for i = 1, 40 do Enemy x: random(64*(2), (32)*64), y: random(64*(2), (map.height-2)*64), lives: 5, isEnemy: true, speed: 30
+	death: =>
+		for i=#enemies,1,-1 do world\remove(enemies[i])
+		enemies = {}
+		--play the movie
+		export STATE = BabaScene!
 	update: (dt) =>
-		assef\update(dt)		
 		for i=#enemies,1,-1 do enemies[i]\update(dt,i)
 		player\update(dt)
+		assef\update(dt)
+		if collision(assef.p, 64, 64, player.p, 64, 64) then self\death!
 		--if love.keyboard.isDown("return") then export STATE = KiteFight!
 	draw: =>
 		super!
 		for i,v in ipairs(enemies) do v\draw!
 		assef\draw!
+
 
 class Assef extends Entity
 	new:(p) =>
@@ -38,6 +43,8 @@ class Assef extends Entity
 			{oncomplete: ()-> 
 				export isDialogue = false
 				export assef = BossAssef(@p)
+				for i = 1, 10 do table.insert(enemies,Enemy x: random(64*(2), (32)*64), y: random(64*(2), (map.height-2)*64), lives: 2, speed: 30, image: love.graphics.newImage("images/Taliban Member 1.png"))
+				for i = 1, 10 do table.insert(enemies,Enemy x: random(64*(2), (32)*64), y: random(64*(2), (map.height-2)*64), lives: 2, speed: 30, image: love.graphics.newImage("images/Taliban Member.png"))
 			})
 
 class BossAssef extends Entity
@@ -45,6 +52,4 @@ class BossAssef extends Entity
 		--@p.speed += dt
 		super\follow(player)
 		super dt
-		if collision(@p, 64, 64, player.p, 64, 64)
-			player.p.lives = 0
 	draw: => love.graphics.draw(@p.image, @p.x, @p.y,0, 4, 4)

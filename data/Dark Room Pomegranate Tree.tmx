@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0.0" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="1">
+ <tileset firstgid="1" source="tiled2.tsx"/>
+ <layer name="Black Background" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJztwzEJAAAMA7B+8y+sngrTkUB6SVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV1T8GT1sh
+  </data>
+ </layer>
+ <layer name="The Path" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJztnF9y0zAQh/3Ov8YxZ+CBBrgTJ6EB7sADTssdoKUBDsFVoMAj65l4UJZVnFSytZDvm/mNZSfxaLzR/ixZVlX9WzyeV9WpaCF6InoqejYvXavj5a1c+1a0Ep2LLkTviEcxHjRVdSKaiWrRXNQ0pWt1vLyQa38mWopeil6JXhOPYuAfvsA/fIF/+IJ85QvylS9oH76gffgCP/cF+coX5CtfkK98wfiVL/APX+AfvsA/bD7WVXUtWos+qfLnYLuOlK1j+hx6vyufb9oF/rGNzuM6p/fbRaRsHdPn0PthmXy1jc7jOqf321WkbB3T59D7YZl8tY3O4zqn99tZpGwd0+fQ+2GZfLWN7gfoPkG/XUbK1jF9Dr0fKxMPux/Q5ZMfcm1+Nn+2N5Gydez7wH6s/It4RPsBX2ela3ac0A/wBeMWvmDcwhfkK1+Qr3xBvvIF+coXPKfzBf7hixT/0M9OrGcdX+px6/+/kdI+rN/S1tJIaR/Wb7lXSyPl/sr6LfdqaVg5p/tvxzwhLM/2eNbBvdph7OMBu56vv5e4fBBdiq5q/CMVKx67PEF/9mizvwquO/5xe6x47PIE/dkbIx74x+2x4rHLE/Rnd0R3RfdE9/GPZGJ+Hnv+HZa7tkL/Iy8p/UH6H/lJ6Q/S/8hPSn/QGhvGP9JIGW//1gzPtWJOFQAAAAAAAAAAAAAAAAB0DK31xLsK0zK01hNzhaZlaK0n5gpNSze3pd3EwZqLylyhvIT+YL3X1seiF3OFxiX0B2teaRv4Rg/+MR6hP+zzDgP+MS7h3EdrXmkbvNtgrQGIf+QlNvfx+cO/P7fWAMQ/8tFd86F4hPNNrTUAmWuaj33iAdNBPHxBPHxBPHxBPHxBPHxBPHyxKx5QBuIxHtf1YVob4+m9Yt8Px+JLKUc91hM8Zz6dH6ZwzDZsH23k+3osvpRy1GMxwbh07L+eS3osvpRy1CNcW2csTppxpcfiSylHPWYTeORZM670Gg+llKMeywni0Y2Ljym9xkMp5ajHzQTxAAAAAAAAAJ/8BhkYwBg=
+  </data>
+ </layer>
+ <layer name="Dirt Around Tree" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt2sENwlAMREGfknIItEGSHgO0AaQ0tgt/pBnp3S3t1VUAAAAAAAAAAAAAAAAAAADQ7z5VrWlL+9R9De9s8EnfdNqj3WWuWtI13ebuaziywSM908seAAAAAAAAAAAAQDO/2GPxiz0Wv9hj8YsNAAAAAAAAAAAAwL/5AaSCD8E=
+  </data>
+ </layer>
+ <layer name="Extended Branches of Tree" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt0bENACEQA8ELjwbohG8ZyoSMDh4kZpJNLTkCAAAAAAAAAAAAAAAAAAD4S8uIL3c5q68PRu5yl1pOLwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXjUBfnsD1A==
+  </data>
+ </layer>
+ <layer name="More Branches" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt0KEBACAMxMCXXQhWhjFhgVoMdy42CQAAAAAAAAAAAAAAAAAAwH9GJbP65q113+/qGwAAAAAAAAAAAAAAAAAAAAAAAAAAAADgpQNrdQO1
+  </data>
+ </layer>
+ <layer name="The Tree" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt2rENwjAARNEr4ywQOtgjWSnsAR3sAQuGAktRVsBGem+Ck357CQAAAAAAAAAAAAAAAAAA8EtTSU6l9QoOt9rirkc3ttrio0c31jG5jq1XAAAAAAAAAAAAAOzmIVmG1is4vGqLtx7dOJfk4ovdjUdt8dQDAAAAAAAAAAAAAODvfQFd/gfX
+  </data>
+ </layer>
+ <layer name="One More Branch" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt2DlOw1AYhdFXpiMkZhWEoYH9EWAZjA2sgWEZrISp5UdAgwyIxr5SzpFukZfG8qfEUVoDAAAAAAAAAAAAAAAAAACGtDdpbX8y9lXw5apaXOsBAAAA/7Y5b21R26pt13Zqu/Oxr2p16ZFFjyx6ZNEjix5Z9MiiRxY9suiRRY8seuR42NAjiR5Z9MiiRxY9suiRRY8seuTRI4seWU7q3p/WzmrntYvapR6jWetam9bWa7PavNZ1Y1/V6vJ9lUWPHH7vZvmtx/t7DEuPLHpk0SOLHnn0yKJHlp/+v9JjHP6/ynJQ935ZO6wd1Y67j8/Kzay129pd7X429lWujr7nx6LnjGH0PT9Oe84YRt/zY9pzxjD6nh/LnjOG8Vj3+qn2XHupvX6+/n4GAAAA/O0N+LNyfQ==
+  </data>
+ </layer>
+ <layer name="The Book Under Tree" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJztzjENACAQBLAzAHbAfwK6mJBAnqFV0AQAAAAAAAAAAAAAAAAAAACAn62W7Fa94Bo9mb16AQAAAAAAAAAAAAAAAAAAAAAAAAAAALx0AO/yAjE=
+  </data>
+ </layer>
+</map>

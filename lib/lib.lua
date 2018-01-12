@@ -91,6 +91,9 @@ do
         v:draw()
       end
       return player:draw()
+    end,
+    death = function(self)
+      player.p.lives = 5
     end
   }
   _base_0.__index = _base_0

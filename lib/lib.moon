@@ -20,19 +20,19 @@ class Entity
   update: (dt) => @p.x, @p.y = @p.x + @p.dx*dt, @p.y + @p.dy*dt
   draw: => love.graphics.draw(@p.image, @p.x, @p.y,0, 4, 4)
   moveTo: (obj, after=() ->) =>
-  	@handle = Timer.every(.04, () ->
-  		angle = math.atan2((obj.y - @p.y), (obj.x - @p.x))
-  		@p.dx, @p.dy  = @p.speed/20 * math.cos(angle), @p.speed/20 * math.sin(angle)
-  		@p.x, @p.y = @p.x + @p.dx, @p.y + @p.dy
-  		if math.abs(obj.y - @p.y) + math.abs(obj.x - @p.x) < 10 
-  			Timer.cancel(@handle)
-  			after!
-  	)
+	@handle = Timer.every(.04, () ->
+		angle = math.atan2((obj.y - @p.y), (obj.x - @p.x))
+		@p.dx, @p.dy  = @p.speed/20 * math.cos(angle), @p.speed/20 * math.sin(angle)
+		@p.x, @p.y = @p.x + @p.dx, @p.y + @p.dy
+		if math.abs(obj.y - @p.y) + math.abs(obj.x - @p.x) < 10 
+			Timer.cancel(@handle)
+			after!
+	)
   speak: (name, obj, after=()->) =>
-  	Moan.speak(name, obj, {oncomplete: after})
+	Moan.speak(name, obj, {oncomplete: after})
   follow: (obj) => 
-  	angle = math.atan2((obj.p.y - @p.y), (obj.p.x - @p.x))
-  	@p.dx, @p.dy  = @p.speed * math.cos(angle), @p.speed * math.sin(angle)
+	angle = math.atan2((obj.p.y - @p.y), (obj.p.x - @p.x))
+	@p.dx, @p.dy  = @p.speed * math.cos(angle), @p.speed * math.sin(angle)
 
 class BaseState
 	new: =>
@@ -42,5 +42,5 @@ class BaseState
 		map\draw()
 		for i,v in ipairs(bullets) do v\draw!
 		player\draw!
-
+	death: => player.p.lives = 5
 --could add move up methods here, to assist with cutscene stuff

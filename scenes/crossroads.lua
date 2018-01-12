@@ -16,38 +16,38 @@ do
   _class_0 = setmetatable({
     __init = function(self)
       world = bump.newWorld()
-      map = sti("data/castle.lua", {
+      map = sti("data/Cross Roads.lua", {
         "bump"
       })
       isDialogue = true
       _class_0.__parent.__init(self)
       local score
-      player.p.x, player.p.y, player.p.lives, score = 9 * 64, 6 * 64, 5, 0
+      player.p.x, player.p.y, player.p.lives, score = 42 * 64, 46 * 64, 5, 0
       self.oedipus = Entity({
-        x = 7 * 64,
-        y = 6 * 64,
+        x = 37 * 64,
+        y = 48 * 64,
         w = 64,
         h = 64,
         speed = 200,
-        image = love.graphics.newImage("images/duncan.png")
+        image = love.graphics.newImage("images/Oedipus.png")
       })
       self.man = Entity({
-        x = 17 * 64,
-        y = 7 * 64,
+        x = 54 * 64,
+        y = 47 * 64,
         w = 64,
         h = 64,
         speed = 200,
-        image = love.graphics.newImage("images/messenger.png")
+        image = love.graphics.newImage("images/Young Man.png")
       })
       return player:speak("Amir", {
-        "Who are you, traveller?"
+        "Who are you, blind traveller?"
       }, function()
-        return self.oedipus:moveTo(tile(8, 6), function()
-          return self.oedipus:moveTo(tile(5, 6), function()
+        return self.oedipus:moveTo(tile(38, 49), function()
+          return self.oedipus:moveTo(tile(36, 48), function()
             return self.oedipus:speak("Oedipus", {
-              "I am Oedipus. -- I was a mighty king. Now I am a blind man."
+              "I am Oedipus. -- I was a mighty king. Now I am lost soul."
             }, function()
-              self.man:moveTo(tile(10, 7))
+              self.man:moveTo(tile(45, 47))
               return self.man:speak("Young Man", {
                 "Hey guys? What are all of you doing out here?"
               }, function()

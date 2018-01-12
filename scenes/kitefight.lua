@@ -2,12 +2,22 @@ do
   local _class_0
   local _parent_0 = BaseState
   local _base_0 = {
+    death = function(self)
+      for i = #enemies, 1, -1 do
+        world:remove(enemies[i])
+      end
+      local enemies = { }
+      STATE = BabaScene()
+    end,
     update = function(self, dt)
-      assef:update(dt)
       for i = #enemies, 1, -1 do
         enemies[i]:update(dt, i)
       end
-      return player:update(dt)
+      player:update(dt)
+      assef:update(dt)
+      if collision(assef.p, 64, 64, player.p, 64, 64) then
+        return self:death()
+      end
     end,
     draw = function(self)
       _class_0.__parent.__base.draw(self)
@@ -33,10 +43,10 @@ do
         x = 43 * 64,
         y = 13 * 64,
         speed = 175,
-        image = love.graphics.newImage("images/macduff.png")
+        image = love.graphics.newImage("images/Assef.png")
       })
       return Moan.speak("Amir", {
-        "I decided to walk in"
+        "I decided to walk in to the building, hoping to find Sohrab"
       }, {
         oncomplete = function()
           world = bump.newWorld()
@@ -96,6 +106,24 @@ do
         oncomplete = function()
           isDialogue = false
           assef = BossAssef(self.p)
+          for i = 1, 10 do
+            table.insert(enemies, Enemy({
+              x = random(64 * (2), (32) * 64),
+              y = random(64 * (2), (map.height - 2) * 64),
+              lives = 2,
+              speed = 30,
+              image = love.graphics.newImage("images/Taliban Member 1.png")
+            }))
+          end
+          for i = 1, 10 do
+            table.insert(enemies, Enemy({
+              x = random(64 * (2), (32) * 64),
+              y = random(64 * (2), (map.height - 2) * 64),
+              lives = 2,
+              speed = 30,
+              image = love.graphics.newImage("images/Taliban Member.png")
+            }))
+          end
         end
       })
     end
@@ -139,10 +167,7 @@ do
   local _base_0 = {
     update = function(self, dt)
       _class_0.__parent.follow(self, player)
-      _class_0.__parent.__base.update(self, dt)
-      if collision(self.p, 64, 64, player.p, 64, 64) then
-        player.p.lives = 0
-      end
+      return _class_0.__parent.__base.update(self, dt)
     end,
     draw = function(self)
       return love.graphics.draw(self.p.image, self.p.x, self.p.y, 0, 4, 4)
