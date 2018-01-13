@@ -12,7 +12,7 @@ class BabaScene extends BaseState
 				@baba\moveTo(tile(10, 7))
 				@baba\speak("Baba", {"Do you know what it is like growing up without a mother? Your story will not be a happy one, Amir."}, ->
 					player\speak("Amir", {"No Baba! It wasn't -- my -- fault"}, ->
-						export STATE = CrossRoads!
+						export STATE = CrossRoads2!
 					)
 				)
 			)

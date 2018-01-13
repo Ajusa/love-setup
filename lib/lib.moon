@@ -16,9 +16,14 @@ fullCollision = (x1,y1,w1,h1, x2,y2,w2,h2) -> x1 < x2+w2 and x2 < x1+w1 and y1 <
 collision = (first,w1,h1,second,w2,h2) -> first.x < second.x+w2 and second.x < first.x+w1 and first.y < second.y+h2 and second.y < first.y+h1
 walls = (item, other) -> if other.p == nil then "slide"
 class Entity
-  new: (p) => @p = p
-  update: (dt) => @p.x, @p.y = @p.x + @p.dx*dt, @p.y + @p.dy*dt
-  draw: => love.graphics.draw(@p.image, @p.x, @p.y,0, 4, 4)
+  new: (p) =>
+  	@p = p
+  	@p.g = anim8.newGrid(16, 16, @p.image\getWidth!, @p.image\getHeight!)
+  	@p.anim = anim8.newAnimation(@p.g(1,1), 0.1)
+  update: (dt) => 
+  	@p.x, @p.y = @p.x + @p.dx*dt, @p.y + @p.dy*dt
+  	if @p.anim then @p.anim\update(dt)
+  draw: => @p.anim\draw(@p.image, @p.x, @p.y, 0,4,4)
   moveTo: (obj, after=() ->) =>
 	@handle = Timer.every(.04, () ->
 		angle = math.atan2((obj.y - @p.y), (obj.x - @p.x))

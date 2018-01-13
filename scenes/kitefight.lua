@@ -3,15 +3,14 @@ do
   local _parent_0 = BaseState
   local _base_0 = {
     death = function(self)
-      for i = #enemies, 1, -1 do
-        world:remove(enemies[i])
-      end
-      local enemies = { }
-      STATE = BabaScene()
+      self.died = true
+      return self.cutScene:play()
     end,
     update = function(self, dt)
-      for i = #enemies, 1, -1 do
-        enemies[i]:update(dt, i)
+      if #enemies > 0 then
+        for i = #enemies, 1, -1 do
+          enemies[i]:update(dt, i)
+        end
       end
       player:update(dt)
       assef:update(dt)
@@ -20,11 +19,19 @@ do
       end
     end,
     draw = function(self)
-      _class_0.__parent.__base.draw(self)
-      for i, v in ipairs(enemies) do
-        v:draw()
+      if self.died then
+        local cX, cY = camera:worldCoords(love.graphics.getWidth() / 2, 0)
+        love.graphics.draw(self.cutScene, cX, cY, 0, love.graphics.getHeight() / self.cutScene:getHeight(), love.graphics.getHeight() / self.cutScene:getHeight(), self.cutScene:getWidth() / 2)
+        if not self.cutScene:isPlaying() then
+          STATE = BabaScene()
+        end
+      else
+        _class_0.__parent.__base.draw(self)
+        for i, v in ipairs(enemies) do
+          v:draw()
+        end
+        return assef:draw()
       end
-      return assef:draw()
     end
   }
   _base_0.__index = _base_0
@@ -45,6 +52,8 @@ do
         speed = 175,
         image = love.graphics.newImage("images/Assef.png")
       })
+      self.died = false
+      self.cutScene = love.graphics.newVideo("cutscenes/Jocasta.ogv")
       return Moan.speak("Amir", {
         "I decided to walk in to the building, hoping to find Sohrab"
       }, {
@@ -166,6 +175,7 @@ do
   local _parent_0 = Entity
   local _base_0 = {
     update = function(self, dt)
+      self.p.speed = self.p.speed + dt
       _class_0.__parent.follow(self, player)
       return _class_0.__parent.__base.update(self, dt)
     end,

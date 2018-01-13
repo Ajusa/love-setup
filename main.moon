@@ -9,6 +9,8 @@ enemies = {}
 isDialogue = false
 --Classes--
 class Dagger extends Entity
+	new: (p) =>
+  		@p = p
 	draw: => love.graphics.draw(dagger, @p.x, @p.y, @p.angle)
 	update: (dt, i) => 
 		@p.distance += ((@p.dx^2) + (@p.dy^2))^(1/2)*dt
@@ -35,19 +37,19 @@ class Enemy extends Entity
 class Player extends Entity	
 	new: (p) =>
 		@p = p
-		--g = anim8.newGrid(16, 16, @p.image\getWidth!, @p.image\getHeight!)
-		--@p.anim = anim8.newAnimation(g('1-3',1, '1-3',2, 1,3), 0.1)
-	draw: => love.graphics.draw(@p.image, @p.x, @p.y, 0,4,4)
+		@p.g = anim8.newGrid(16, 16, @p.image\getWidth!, @p.image\getHeight!)
+		@p.anim = anim8.newAnimation(@p.g('1-2',1, '1-2',2), 0.1)
+	draw: => @p.anim\draw(@p.image, @p.x, @p.y, 0,4,4)
 	update: (dt) =>
-		if not @p.disabled
-			--@p.anim\update(dt)
-			if love.keyboard.isDown("a") then @p.x, @p.y = world\move(self, @p.x - @p.speed*dt,@p.y, walls)
-			if love.keyboard.isDown("d") then @p.x, @p.y = world\move(self, @p.x + @p.speed*dt,@p.y, walls)
-			if love.keyboard.isDown("w") then @p.x, @p.y = world\move(self, @p.x, @p.y - @p.speed*dt, walls)
-			if love.keyboard.isDown("s") then @p.x, @p.y = world\move(self, @p.x, @p.y + @p.speed*dt, walls)
-			for i=#enemies,1,-1 do if fullCollision(enemies[i].p.x + 8, enemies[i].p.y + 8, 48, 48, @p.x, @p.y, 64, 64) -- the 8's are for a smaller hitbox
-					@p.lives -= 1
-					table.remove(enemies, i)
+		@p.anim\update(dt)
+		if love.keyboard.isDown("a") then @p.x, @p.y = world\move(self, @p.x - @p.speed*dt,@p.y, walls)
+		if love.keyboard.isDown("d") then @p.x, @p.y = world\move(self, @p.x + @p.speed*dt,@p.y, walls)
+		if love.keyboard.isDown("w") then @p.x, @p.y = world\move(self, @p.x, @p.y - @p.speed*dt, walls)
+		if love.keyboard.isDown("s") then @p.x, @p.y = world\move(self, @p.x, @p.y + @p.speed*dt, walls)
+		for i=#enemies,1,-1 do if fullCollision(enemies[i].p.x + 8, enemies[i].p.y + 8, 48, 48, @p.x, @p.y, 64, 64) -- the 8's are for a smaller hitbox
+				@p.lives -= 1
+				table.remove(enemies, i)
+
 --Actual Game--
 love.load = ->	
 	export player = Player x: 43*64, y: 6*64, w: 64, h: 64, speed: 200, lives: 5, image: love.graphics.newImage("images/Amir.png")
@@ -55,7 +57,7 @@ love.load = ->
 	export bullets = {}
 	export dagger = love.graphics.newImage("images/dagger.png")
 	export cameraX,cameraY = camera\cameraCoords(player.p.x, player.p.y)
-	export STATE = CrossRoads!
+	export STATE = CrossRoads2!
 love.update = (dt) ->
 	Moan.update(dt)
 	Timer.update(dt)

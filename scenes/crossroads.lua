@@ -21,15 +21,14 @@ do
       })
       isDialogue = true
       _class_0.__parent.__init(self)
-      local score
-      player.p.x, player.p.y, player.p.lives, score = 42 * 64, 46 * 64, 5, 0
+      player.p.x, player.p.y, player.p.lives, player.p.anim = 42 * 64, 46 * 64, 5, anim8.newAnimation(player.p.g('1-2', 1, '1-2', 2), 0.1)
       self.oedipus = Entity({
         x = 37 * 64,
         y = 48 * 64,
         w = 64,
         h = 64,
         speed = 200,
-        image = love.graphics.newImage("images/Oedipus.png")
+        image = love.graphics.newImage("images/Blind Oedipus.png")
       })
       self.man = Entity({
         x = 54 * 64,
@@ -93,5 +92,84 @@ do
     _parent_0.__inherited(_parent_0, _class_0)
   end
   CrossRoads = _class_0
+end
+do
+  local _class_0
+  local _parent_0 = BaseState
+  local _base_0 = {
+    update = function(self, dt)
+      return player:update(dt)
+    end,
+    draw = function(self)
+      _class_0.__parent.__base.draw(self)
+      self.oedipus:draw()
+      return self.amir:draw()
+    end
+  }
+  _base_0.__index = _base_0
+  setmetatable(_base_0, _parent_0.__base)
+  _class_0 = setmetatable({
+    __init = function(self)
+      world = bump.newWorld()
+      map = sti("data/Cross Roads.lua", {
+        "bump"
+      })
+      isDialogue = true
+      _class_0.__parent.__init(self)
+      player.p.x, player.p.y, player.p.lives, player.p.image, player.p.anim = 45 * 64, 47 * 64, 5, love.graphics.newImage("images/Young Man.png"), anim8.newAnimation(player.p.g('1-2', 1, '1-2', 2), 0.1)
+      self.oedipus = Entity({
+        x = 40 * 64,
+        y = 45 * 64,
+        w = 64,
+        h = 64,
+        speed = 200,
+        image = love.graphics.newImage("images/Blind Oedipus.png")
+      })
+      self.amir = Entity({
+        x = 42 * 64,
+        y = 46 * 64,
+        w = 64,
+        h = 64,
+        speed = 200,
+        image = love.graphics.newImage("images/Amir.png")
+      })
+      return player:speak("Young Man", {
+        "Wow, you've gone through a lot."
+      }, function()
+        return self.oedipus:speak("Oedipus", {
+          "I too never had a mother's love."
+        }, function()
+          return self.amir:speak("Young Man", {
+            "You guys are regretting that? Now let me tell you what my mother did..."
+          }, function() end)
+        end)
+      end)
+    end,
+    __base = _base_0,
+    __name = "CrossRoads2",
+    __parent = _parent_0
+  }, {
+    __index = function(cls, name)
+      local val = rawget(_base_0, name)
+      if val == nil then
+        local parent = rawget(cls, "__parent")
+        if parent then
+          return parent[name]
+        end
+      else
+        return val
+      end
+    end,
+    __call = function(cls, ...)
+      local _self_0 = setmetatable({}, _base_0)
+      cls.__init(_self_0, ...)
+      return _self_0
+    end
+  })
+  _base_0.__class = _class_0
+  if _parent_0.__inherited then
+    _parent_0.__inherited(_parent_0, _class_0)
+  end
+  CrossRoads2 = _class_0
   return _class_0
 end

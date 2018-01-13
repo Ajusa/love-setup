@@ -26,8 +26,8 @@ do
   _base_0.__index = _base_0
   setmetatable(_base_0, _parent_0.__base)
   _class_0 = setmetatable({
-    __init = function(self, ...)
-      return _class_0.__parent.__init(self, ...)
+    __init = function(self, p)
+      self.p = p
     end,
     __base = _base_0,
     __name = "Dagger",
@@ -123,27 +123,26 @@ do
   local _parent_0 = Entity
   local _base_0 = {
     draw = function(self)
-      return love.graphics.draw(self.p.image, self.p.x, self.p.y, 0, 4, 4)
+      return self.p.anim:draw(self.p.image, self.p.x, self.p.y, 0, 4, 4)
     end,
     update = function(self, dt)
-      if not self.p.disabled then
-        if love.keyboard.isDown("a") then
-          self.p.x, self.p.y = world:move(self, self.p.x - self.p.speed * dt, self.p.y, walls)
-        end
-        if love.keyboard.isDown("d") then
-          self.p.x, self.p.y = world:move(self, self.p.x + self.p.speed * dt, self.p.y, walls)
-        end
-        if love.keyboard.isDown("w") then
-          self.p.x, self.p.y = world:move(self, self.p.x, self.p.y - self.p.speed * dt, walls)
-        end
-        if love.keyboard.isDown("s") then
-          self.p.x, self.p.y = world:move(self, self.p.x, self.p.y + self.p.speed * dt, walls)
-        end
-        for i = #enemies, 1, -1 do
-          if fullCollision(enemies[i].p.x + 8, enemies[i].p.y + 8, 48, 48, self.p.x, self.p.y, 64, 64) then
-            self.p.lives = self.p.lives - 1
-            table.remove(enemies, i)
-          end
+      self.p.anim:update(dt)
+      if love.keyboard.isDown("a") then
+        self.p.x, self.p.y = world:move(self, self.p.x - self.p.speed * dt, self.p.y, walls)
+      end
+      if love.keyboard.isDown("d") then
+        self.p.x, self.p.y = world:move(self, self.p.x + self.p.speed * dt, self.p.y, walls)
+      end
+      if love.keyboard.isDown("w") then
+        self.p.x, self.p.y = world:move(self, self.p.x, self.p.y - self.p.speed * dt, walls)
+      end
+      if love.keyboard.isDown("s") then
+        self.p.x, self.p.y = world:move(self, self.p.x, self.p.y + self.p.speed * dt, walls)
+      end
+      for i = #enemies, 1, -1 do
+        if fullCollision(enemies[i].p.x + 8, enemies[i].p.y + 8, 48, 48, self.p.x, self.p.y, 64, 64) then
+          self.p.lives = self.p.lives - 1
+          table.remove(enemies, i)
         end
       end
     end
@@ -153,6 +152,8 @@ do
   _class_0 = setmetatable({
     __init = function(self, p)
       self.p = p
+      self.p.g = anim8.newGrid(16, 16, self.p.image:getWidth(), self.p.image:getHeight())
+      self.p.anim = anim8.newAnimation(self.p.g('1-2', 1, '1-2', 2), 0.1)
     end,
     __base = _base_0,
     __name = "Player",
@@ -195,7 +196,7 @@ love.load = function()
   bullets = { }
   dagger = love.graphics.newImage("images/dagger.png")
   cameraX, cameraY = camera:cameraCoords(player.p.x, player.p.y)
-  STATE = CrossRoads()
+  STATE = CrossRoads2()
 end
 love.update = function(dt)
   Moan.update(dt)

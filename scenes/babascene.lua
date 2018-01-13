@@ -43,7 +43,7 @@ do
             return player:speak("Amir", {
               "No Baba! It wasn't -- my -- fault"
             }, function()
-              STATE = CrossRoads()
+              STATE = CrossRoads2()
             end)
           end)
         end)

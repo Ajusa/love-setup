@@ -33,9 +33,12 @@ do
   local _base_0 = {
     update = function(self, dt)
       self.p.x, self.p.y = self.p.x + self.p.dx * dt, self.p.y + self.p.dy * dt
+      if self.p.anim then
+        return self.p.anim:update(dt)
+      end
     end,
     draw = function(self)
-      return love.graphics.draw(self.p.image, self.p.x, self.p.y, 0, 4, 4)
+      return self.p.anim:draw(self.p.image, self.p.x, self.p.y, 0, 4, 4)
     end,
     moveTo = function(self, obj, after)
       if after == nil then
@@ -68,6 +71,8 @@ do
   _class_0 = setmetatable({
     __init = function(self, p)
       self.p = p
+      self.p.g = anim8.newGrid(16, 16, self.p.image:getWidth(), self.p.image:getHeight())
+      self.p.anim = anim8.newAnimation(self.p.g(1, 1), 0.1)
     end,
     __base = _base_0,
     __name = "Entity"
