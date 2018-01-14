@@ -19,7 +19,7 @@ return {
       tileheight = 64,
       spacing = 0,
       margin = 0,
-      image = "../../Akoni/images/roguelikeSheet_transparent.png",
+      image = "../images/roguelikeSheet_transparent.png",
       imagewidth = 3648,
       imageheight = 1984,
       tileoffset = {

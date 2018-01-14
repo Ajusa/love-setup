@@ -1,4 +1,5 @@
 assert(love.filesystem.load("lib/lib.lua"))()
+require("scenes/kabul")
 require("scenes/kitefight")
 require("scenes/crossroads")
 require("scenes/babascene")
@@ -197,7 +198,7 @@ love.load = function()
   bullets = { }
   dagger = love.graphics.newImage("images/dagger.png")
   cameraX, cameraY = camera:cameraCoords(player.p.x, player.p.y)
-  STATE = BabaScene()
+  STATE = CrossRoads()
 end
 love.update = function(dt)
   Moan.update(dt)

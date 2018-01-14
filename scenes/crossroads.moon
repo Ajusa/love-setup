@@ -15,7 +15,7 @@ class CrossRoads extends BaseState
 						@man\moveTo(tile(45, 47))
 						@man\speak("Young Man", {"Hey guys? What are all of you doing out here?"}, ->
 							@oedipus\speak("Oedipus", {"Do any of you know stories?", "When you have been in the wilderness for so long, you start to long for something exciting"}, ->
-								player\speak("Amir", {"Luckily for you, I am a prime storyteller. Let me tell you about my past..."}, -> export STATE = KiteFight!)
+								player\speak("Amir", {"Luckily for you, I am a prime storyteller. Let me tell you about my past..."}, -> export STATE = DarkRoom!)
 							)
 						)
 					)

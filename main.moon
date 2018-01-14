@@ -1,4 +1,5 @@
 assert(love.filesystem.load("lib/lib.lua"))!
+require("scenes/kabul")
 require("scenes/kitefight")
 require("scenes/crossroads")
 require("scenes/babascene")
@@ -58,7 +59,7 @@ love.load = ->
 	export bullets = {}
 	export dagger = love.graphics.newImage("images/dagger.png")
 	export cameraX,cameraY = camera\cameraCoords(player.p.x, player.p.y)
-	export STATE = BabaScene!
+	export STATE = CrossRoads!
 love.update = (dt) ->
 	Moan.update(dt)
 	Timer.update(dt)

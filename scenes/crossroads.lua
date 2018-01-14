@@ -57,7 +57,7 @@ do
                   return player:speak("Amir", {
                     "Luckily for you, I am a prime storyteller. Let me tell you about my past..."
                   }, function()
-                    STATE = KiteFight()
+                    STATE = DarkRoom()
                   end)
                 end)
               end)

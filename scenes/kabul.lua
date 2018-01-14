@@ -5,31 +5,22 @@ do
     update = function(self, dt)
       player:update(dt)
       for i = #bullets, 1, -1 do
-        if collision(bullets[i].p, 20, 40, self.baba.p, 64, 64) then
+        if collision(bullets[i].p, 20, 40, self.tree.p, 64, 64) then
           isDialogue = true
-          player:speak("Amir", {
-            "Baba? Is that you? Where is my mother?"
+          self.tree:speak("Tree", {
+            "Amir and Hassan, the sultans of Kabul."
           }, function()
-            return self.baba:speak("Baba", {
-              "You killed her Amir. My Princess. She died giving birth to you."
-            }, function()
-              return self.baba:speak("Baba", {
-                "Do you know what it is like growing up without a mother? Your story will not be a happy one, Amir."
-              }, function()
-                return player:speak("Amir", {
-                  "No Baba! It wasn't -- my -- fault"
-                }, function()
-                  STATE = CrossRoads2()
-                end)
-              end)
-            end)
+            isDialogue = false
           end)
         end
+      end
+      if collision(player.p, 64, 64, tile(13, 48), 64, 192) then
+        STATE = KiteFight()
       end
     end,
     draw = function(self)
       _class_0.__parent.__base.draw(self)
-      return self.baba:draw()
+      return self.tree:draw()
     end
   }
   _base_0.__index = _base_0
@@ -40,19 +31,18 @@ do
       map = sti("data/Dark Room.lua", {
         "bump"
       })
-      player.p.x, player.p.y, player.p.lives = 30 * 64, 12 * 64, 5
+      player.p.x, player.p.y, player.p.lives = 14 * 64, 2 * 64, 5
       _class_0.__parent.__init(self)
       self.tree = Entity({
-        x = 16 * 64,
-        y = 7 * 64,
+        x = 21 * 64,
+        y = 18 * 64,
         w = 64,
         h = 64,
-        speed = 200,
-        image = love.graphics.newImage("images/Baba.png")
+        image = love.graphics.newImage("images/Pomegranate Tree.png")
       })
       isDialogue = true
       return player:speak("Amir", {
-        "... Where am I? This looks like Baba's house?! -- But it is brand new, as if the bombings never happened."
+        "Where am I? Better find the exit..."
       }, function()
         isDialogue = false
       end)

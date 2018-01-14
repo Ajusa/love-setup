@@ -105,7 +105,7 @@ do
   _class_0 = setmetatable({
     __init = function(self)
       map:bump_init(world)
-      return world:add(player, player.p.x + 8, player.p.y + 8, 48, 48)
+      return world:add(player, player.p.x + 4, player.p.y + 4, 48, 48)
     end,
     __base = _base_0,
     __name = "BaseState"

@@ -42,7 +42,7 @@ class Entity
 class BaseState
 	new: =>
 		map\bump_init(world)
-		world\add(player, player.p.x + 8, player.p.y + 8, 48, 48)
+		world\add(player, player.p.x + 4, player.p.y + 4, 48, 48)
 	draw: =>
 		map\draw()
 		for i,v in ipairs(bullets) do v\draw!
