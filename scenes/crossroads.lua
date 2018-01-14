@@ -174,5 +174,101 @@ do
     _parent_0.__inherited(_parent_0, _class_0)
   end
   CrossRoads2 = _class_0
+end
+do
+  local _class_0
+  local _parent_0 = BaseState
+  local _base_0 = {
+    update = function(self, dt)
+      return player:update(dt)
+    end,
+    draw = function(self)
+      _class_0.__parent.__base.draw(self)
+      self.oedipus:draw()
+      return self.amir:draw()
+    end
+  }
+  _base_0.__index = _base_0
+  setmetatable(_base_0, _parent_0.__base)
+  _class_0 = setmetatable({
+    __init = function(self)
+      world = bump.newWorld()
+      map = sti("data/Cross Roads.lua", {
+        "bump"
+      })
+      isDialogue = true
+      _class_0.__parent.__init(self)
+      player.p.x, player.p.y, player.p.lives, player.p.image = 40 * 64, 45 * 64, 5, love.graphics.newImage("images/Blind Oedipus.png")
+      self.man = Entity({
+        x = 45 * 64,
+        y = 47 * 64,
+        w = 64,
+        h = 64,
+        speed = 200,
+        image = love.graphics.newImage("images/Young Man.png")
+      })
+      self.amir = Entity({
+        x = 42 * 64,
+        y = 46 * 64,
+        w = 64,
+        h = 64,
+        speed = 200,
+        image = love.graphics.newImage("images/Amir.png")
+      })
+      return player:speak("Oedipus", {
+        "Child, you killed your own mother?"
+      }, function()
+        return self.amir:speak("Amir", {
+          "That is pretty dark."
+        }, function()
+          return self.man:speak("Young Man", {
+            "Hey, she killed my brother when she bought him at an orphanage."
+          }, function()
+            player:speak("Oedipus", {
+              "I actually had a good reason for killing my mother. Well, she was also my wife.",
+              "It all started with me killing my father..."
+            }, function()
+              return self.amir:speak("Amir", {
+                "..."
+              }, function()
+                return self.man:speak("Young Man", {
+                  "..."
+                }, function()
+                  STATE = CrossRoadsFight()
+                end)
+              end)
+            end)
+            isDialogue = false
+            STATE = America()
+          end)
+        end)
+      end)
+    end,
+    __base = _base_0,
+    __name = "CrossRoads3",
+    __parent = _parent_0
+  }, {
+    __index = function(cls, name)
+      local val = rawget(_base_0, name)
+      if val == nil then
+        local parent = rawget(cls, "__parent")
+        if parent then
+          return parent[name]
+        end
+      else
+        return val
+      end
+    end,
+    __call = function(cls, ...)
+      local _self_0 = setmetatable({}, _base_0)
+      cls.__init(_self_0, ...)
+      return _self_0
+    end
+  })
+  _base_0.__class = _class_0
+  if _parent_0.__inherited then
+    _parent_0.__inherited(_parent_0, _class_0)
+  end
+  CrossRoads3 = _class_0
   return _class_0
 end

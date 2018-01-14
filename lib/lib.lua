@@ -6,6 +6,7 @@ Moan = require('lib/Moan')
 anim8 = require('lib/anim8')
 kenPixel = love.graphics.newFont("lib/kenpixel.ttf", 18)
 love.graphics.setDefaultFilter("nearest")
+--love.window.setFullscreen(true)
 Moan.font = kenPixel
 Moan.selectButton = "return"
 random = function(l, h)

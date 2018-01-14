@@ -198,7 +198,7 @@ love.load = function()
   bullets = { }
   dagger = love.graphics.newImage("images/dagger.png")
   cameraX, cameraY = camera:cameraCoords(player.p.x, player.p.y)
-  STATE = CrossRoads()
+  STATE = KiteFight()
 end
 love.update = function(dt)
   Moan.update(dt)

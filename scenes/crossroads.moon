@@ -55,4 +55,35 @@ class CrossRoads2 extends BaseState
 		super!
 		@oedipus\draw!
 		@amir\draw!
-
+class CrossRoads3 extends BaseState
+	new: =>
+		export world = bump.newWorld!
+		export map = sti("data/Cross Roads.lua", {"bump"})
+		export isDialogue = true
+		super!
+		player.p.x, player.p.y, player.p.lives, player.p.image = 40*64, 45*64, 5, love.graphics.newImage("images/Blind Oedipus.png")
+		@man = Entity x: 45*64, y: 47*64, w: 64, h: 64, speed: 200, image: love.graphics.newImage("images/Young Man.png")
+		@amir = Entity x: 42*64, y: 46*64, w: 64, h: 64, speed: 200, image: love.graphics.newImage("images/Amir.png")
+		player\speak("Oedipus", {"Child, you killed your own mother?"}, -> 
+			@amir\speak("Amir", {"That is pretty dark."}, ->
+				@man\speak("Young Man", {"Hey, she killed my brother when she bought him at an orphanage."}, ->
+					player\speak("Oedipus", {"I actually had a good reason for killing my mother. Well, she was also my wife.", "It all started with me killing my father..."}, -> 
+						@amir\speak("Amir", {"..."}, ->
+							@man\speak("Young Man", {"..."}, ->
+								export STATE = CrossRoadsFight!
+							)
+						)	
+					)
+					export isDialogue = false
+					export STATE = America!
+				)
+			)
+		)
+		--player\moveTo(tile(43, 10))
+	update: (dt) =>
+		player\update(dt)
+		--if love.keyboard.isDown("return") then export STATE = KiteFight!
+	draw: =>
+		super!
+		@oedipus\draw!
+		@amir\draw!

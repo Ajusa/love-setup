@@ -4,7 +4,8 @@ do
   local _base_0 = {
     death = function(self)
       self.died = true
-      return self.cutScene:play()
+      self.cutScene:play()
+      enemies = { }
     end,
     update = function(self, dt)
       if #enemies > 0 then
@@ -53,7 +54,7 @@ do
         image = love.graphics.newImage("images/Assef.png")
       })
       self.died = false
-      self.cutScene = love.graphics.newVideo("cutscenes/Jocasta.ogv")
+      self.cutScene = love.graphics.newVideo("cutscenes/Assef-Death.ogv")
       return Moan.speak("Amir", {
         "I decided to walk in to the building, hoping to find Sohrab"
       }, {

@@ -87,8 +87,10 @@ do
   _base_0.__index = _base_0
   setmetatable(_base_0, _parent_0.__base)
   _class_0 = setmetatable({
-    __init = function(self, ...)
-      return _class_0.__parent.__init(self, ...)
+    __init = function(self, p)
+      _class_0.__parent.__init(self, p)
+      self.p.g = anim8.newGrid(32, 32, self.p.image:getWidth(), self.p.image:getHeight())
+      self.p.anim = anim8.newAnimation(self.p.g(1, 1), 0.1)
     end,
     __base = _base_0,
     __name = "Mommy",
@@ -125,7 +127,7 @@ do
       _class_0.__parent.__base.update(self, dt)
       _class_0.__parent.follow(self, player)
       for i = #bullets, 1, -1 do
-        if collision(bullets[i].p, 20, 40, self.p, 64, 64) then
+        if collision(bullets[i].p, 20, 40, self.p, 128, 128) then
           self.p.lives = self.p.lives - 1
           table.remove(bullets, i)
         end
@@ -155,6 +157,9 @@ do
   _class_0 = setmetatable({
     __init = function(self, p)
       _class_0.__parent.__init(self, p)
+      self.p.image = love.graphics.newImage("images/Mommy Mad.png")
+      self.p.g = anim8.newGrid(32, 32, self.p.image:getWidth(), self.p.image:getHeight())
+      self.p.anim = anim8.newAnimation(self.p.g('1-2', 1, '1-2', 2), 0.1)
       self:addMinions()
       self.handle = Timer.every(10, function()
         return self:addMinions()
@@ -248,13 +253,13 @@ do
       player.p.x, player.p.y, player.p.lives = 38 * 64, 13 * 64, 5
       _class_0.__parent.__init(self)
       mommy = Mommy({
-        x = 43 * 64,
+        x = 41 * 64,
         y = 13 * 64,
         dx = 0,
         dy = 0,
         speed = 100,
         lives = 20,
-        image = love.graphics.newImage("images/Granny.png")
+        image = love.graphics.newImage("images/Mommy.png")
       })
       return mommy:talk()
     end,

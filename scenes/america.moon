@@ -23,6 +23,10 @@ class America extends BaseState
 		@barker\draw!
 
 class Mommy extends Entity
+	new: (p) =>
+		super p
+		@p.g = anim8.newGrid(32, 32, @p.image\getWidth!, @p.image\getHeight!)
+		@p.anim = anim8.newAnimation(@p.g(1,1), 0.1)
 	talk: =>
 		Mommy\speak("Mommy", {"Oh hi there Young Man...",
 			"Why are you still here?"
@@ -35,12 +39,15 @@ class Mommy extends Entity
 class BossMommy extends Entity
 	new: (p) => 
 		super p
+		@p.image = love.graphics.newImage("images/Mommy Mad.png")
+		@p.g = anim8.newGrid(32, 32, @p.image\getWidth!, @p.image\getHeight!)
+		@p.anim = anim8.newAnimation(@p.g('1-2',1, '1-2',2), 0.1)
 		self\addMinions!
 		@handle = Timer.every(10, () -> self\addMinions!)
 	update: (dt) =>
 		super dt
 		super\follow(player)
-		for i=#bullets,1,-1 do if collision(bullets[i].p, 20, 40, @p, 64, 64) then --change this collision box
+		for i=#bullets,1,-1 do if collision(bullets[i].p, 20, 40, @p, 128, 128) then --change this collision box
 				@p.lives -= 1
 				table.remove(bullets, i)
 	addMinions: =>
@@ -57,7 +64,7 @@ class AmericaFight extends BaseState
 		export map = sti("data/testmap.lua", {"bump"})
 		player.p.x, player.p.y, player.p.lives = 38*64, 13*64, 5
 		super!
-		export mommy = Mommy x:43*64, y: 13*64, dx:0, dy:0, speed: 100, lives: 20, image: love.graphics.newImage("images/Granny.png")
+		export mommy = Mommy x:41*64, y: 13*64, dx:0, dy:0, speed: 100, lives: 20, image: love.graphics.newImage("images/Mommy.png")
 		mommy\talk!
 		--player\moveTo(tile(43, 10))
 	death: =>

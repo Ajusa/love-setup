@@ -14,7 +14,7 @@ do
           end)
         end
       end
-      if collision(player.p, 64, 64, tile(13, 48), 64, 192) then
+      if collision(player.p, 64, 64, tile(13, 48), 192, 64) then
         STATE = KiteFight()
       end
     end,

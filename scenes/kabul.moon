@@ -16,7 +16,8 @@ class DarkRoom extends BaseState
 			@tree\speak("Tree", {"Amir and Hassan, the sultans of Kabul."}, -> 
 				export isDialogue = false
 			)
-		if collision(player.p, 64, 64, tile(13, 48), 64, 192) then export STATE = KiteFight! --needs to be changed to kabul
+		if collision(player.p, 64, 64, tile(13, 48), 192, 64) then export STATE = KiteFight! --needs to be changed to kabul
 	draw: =>
 		super!
 		@tree\draw!
+
