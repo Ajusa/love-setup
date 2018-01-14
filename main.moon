@@ -15,7 +15,7 @@ class Dagger extends Entity
 	draw: => love.graphics.draw(dagger, @p.x, @p.y, @p.angle)
 	update: (dt, i) => 
 		@p.distance += ((@p.dx^2) + (@p.dy^2))^(1/2)*dt
-		if @p.distance > 400 do table.remove(bullets, i)
+		if @p.distance > 500 do table.remove(bullets, i)
 		super dt
 class Enemy extends Entity
 	new: (p) => 
@@ -58,7 +58,7 @@ love.load = ->
 	export bullets = {}
 	export dagger = love.graphics.newImage("images/dagger.png")
 	export cameraX,cameraY = camera\cameraCoords(player.p.x, player.p.y)
-	export STATE = CrossRoads!
+	export STATE = BabaScene!
 love.update = (dt) ->
 	Moan.update(dt)
 	Timer.update(dt)
@@ -92,6 +92,6 @@ love.mousepressed = (x, y, button) ->
 		startX, startY = player.p.x + 32, player.p.y + 32
 		mouseX, mouseY = camera\worldCoords(x,y) --this stops the mouse coords from being off from the real coors, cause we have a camera
 		angle = math.atan2((mouseY - startY), (mouseX - startX))
-		dx, dy = 250 * math.cos(angle), 250 * math.sin(angle)
+		dx, dy = 350 * math.cos(angle), 350 * math.sin(angle)
 		table.insert(bullets, Dagger x: startX, y: startY, :dx, :dy, :angle, distance: 0)
 love.keyreleased = (key) -> Moan.keyreleased(key)

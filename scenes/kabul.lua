@@ -37,12 +37,12 @@ do
   _class_0 = setmetatable({
     __init = function(self)
       world = bump.newWorld()
-      map = sti("data/Baba's House.lua", {
+      map = sti("data/Dark Room.lua", {
         "bump"
       })
       player.p.x, player.p.y, player.p.lives = 30 * 64, 12 * 64, 5
       _class_0.__parent.__init(self)
-      self.baba = Entity({
+      self.tree = Entity({
         x = 16 * 64,
         y = 7 * 64,
         w = 64,
@@ -58,7 +58,7 @@ do
       end)
     end,
     __base = _base_0,
-    __name = "BabaScene",
+    __name = "DarkRoom",
     __parent = _parent_0
   }, {
     __index = function(cls, name)
@@ -82,6 +82,6 @@ do
   if _parent_0.__inherited then
     _parent_0.__inherited(_parent_0, _class_0)
   end
-  BabaScene = _class_0
+  DarkRoom = _class_0
   return _class_0
 end

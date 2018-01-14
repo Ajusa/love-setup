@@ -1,11 +1,11 @@
 export * 
-class BabaScene extends BaseState
+class DarkRoom extends BaseState
 	new: =>
 		export world = bump.newWorld!
-		export map = sti("data/Baba's House.lua", {"bump"})
+		export map = sti("data/Dark Room.lua", {"bump"})
 		player.p.x, player.p.y, player.p.lives = 30*64, 12*64, 5
 		super!
-		@baba = Entity x: 16*64, y: 7*64, w: 64, h: 64, speed: 200, image: love.graphics.newImage("images/Baba.png")
+		@tree = Entity x: 16*64, y: 7*64, w: 64, h: 64, speed: 200, image: love.graphics.newImage("images/Baba.png")
 		export isDialogue = true
 		player\speak("Amir", {"... Where am I? This looks like Baba's house?! -- But it is brand new, as if the bombings never happened."}, -> export isDialogue = false)
 		--player\moveTo(tile(43, 10))

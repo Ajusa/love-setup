@@ -16,7 +16,7 @@ do
     end,
     update = function(self, dt, i)
       self.p.distance = self.p.distance + (((self.p.dx ^ 2) + (self.p.dy ^ 2)) ^ (1 / 2) * dt)
-      if self.p.distance > 400 then
+      if self.p.distance > 500 then
         do
           table.remove(bullets, i)
         end
@@ -197,7 +197,7 @@ love.load = function()
   bullets = { }
   dagger = love.graphics.newImage("images/dagger.png")
   cameraX, cameraY = camera:cameraCoords(player.p.x, player.p.y)
-  STATE = CrossRoads()
+  STATE = BabaScene()
 end
 love.update = function(dt)
   Moan.update(dt)
@@ -232,7 +232,7 @@ love.mousepressed = function(x, y, button)
     local startX, startY = player.p.x + 32, player.p.y + 32
     local mouseX, mouseY = camera:worldCoords(x, y)
     local angle = math.atan2((mouseY - startY), (mouseX - startX))
-    local dx, dy = 250 * math.cos(angle), 250 * math.sin(angle)
+    local dx, dy = 350 * math.cos(angle), 350 * math.sin(angle)
     return table.insert(bullets, Dagger({
       x = startX,
       y = startY,
