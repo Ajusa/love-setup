@@ -2,6 +2,7 @@ assert(love.filesystem.load("lib/lib.lua"))()
 require("scenes/kitefight")
 require("scenes/crossroads")
 require("scenes/babascene")
+require("scenes/america")
 sinceFire = 0
 score = 0
 enemies = { }
@@ -196,7 +197,7 @@ love.load = function()
   bullets = { }
   dagger = love.graphics.newImage("images/dagger.png")
   cameraX, cameraY = camera:cameraCoords(player.p.x, player.p.y)
-  STATE = CrossRoads2()
+  STATE = CrossRoads()
 end
 love.update = function(dt)
   Moan.update(dt)
@@ -216,21 +217,14 @@ love.update = function(dt)
   return camera:lockPosition(player.p.x, player.p.y)
 end
 love.draw = function()
-  if player.p.lives > 0 then
-    camera:attach()
-    STATE:draw()
-    camera:detach()
-    love.graphics.setColor(255, 255, 255, 255)
-    love.graphics.setFont(kenPixel)
-    love.graphics.print("Lives: " .. player.p.lives, 12, 12)
-    love.graphics.print("Score: " .. score, 130, 12)
-    return Moan.draw()
-  else
-    love.graphics.setFont(love.graphics.newFont("lib/kenpixel.ttf", 30))
-    love.graphics.print("GAME OVER!", love.graphics.getWidth() / 4, love.graphics.getHeight() / 2)
-    love.graphics.print("Score: " .. score, love.graphics.getWidth() / 4, love.graphics.getHeight() / 1.5)
-    return love.graphics.print("Hit enter to play again ", love.graphics.getWidth() / 4, love.graphics.getHeight() / 1.2)
-  end
+  camera:attach()
+  STATE:draw()
+  camera:detach()
+  love.graphics.setColor(255, 255, 255, 255)
+  love.graphics.setFont(kenPixel)
+  love.graphics.print("Lives: " .. player.p.lives, 12, 12)
+  love.graphics.print("Score: " .. score, 130, 12)
+  return Moan.draw()
 end
 love.mousepressed = function(x, y, button)
   if button == 1 and sinceFire > .3 and not isDialogue then

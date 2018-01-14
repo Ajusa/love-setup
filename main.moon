@@ -2,6 +2,7 @@ assert(love.filesystem.load("lib/lib.lua"))!
 require("scenes/kitefight")
 require("scenes/crossroads")
 require("scenes/babascene")
+require("scenes/america")
 export *
 sinceFire = 0
 score = 0
@@ -57,7 +58,7 @@ love.load = ->
 	export bullets = {}
 	export dagger = love.graphics.newImage("images/dagger.png")
 	export cameraX,cameraY = camera\cameraCoords(player.p.x, player.p.y)
-	export STATE = CrossRoads2!
+	export STATE = CrossRoads!
 love.update = (dt) ->
 	Moan.update(dt)
 	Timer.update(dt)
@@ -71,21 +72,20 @@ love.update = (dt) ->
 	--camera\lockWindow(player.p.x, player.p.y, cameraX-64, cameraX+64, cameraY-64, cameraY+64) --rectangle for camera to follow
 	camera\lockPosition(player.p.x, player.p.y)
 love.draw = ->
-	if player.p.lives > 0
-		camera\attach!
-		STATE\draw!
-		--map\bump_draw(world) --this is the debug code for seeing collision boxes
-		camera\detach!
-		love.graphics.setColor(255, 255, 255, 255)
-		love.graphics.setFont(kenPixel)
-		love.graphics.print("Lives: "..player.p.lives, 12, 12)
-		love.graphics.print("Score: "..score, 130, 12)
-		Moan.draw!
-	else 
-		love.graphics.setFont(love.graphics.newFont("lib/kenpixel.ttf", 30))
-		love.graphics.print("GAME OVER!", love.graphics.getWidth!/4, love.graphics.getHeight!/2)
-		love.graphics.print("Score: ".. score, love.graphics.getWidth!/4, love.graphics.getHeight!/1.5)
-		love.graphics.print("Hit enter to play again ", love.graphics.getWidth!/4, love.graphics.getHeight!/1.2)
+	camera\attach!
+	STATE\draw!
+	--map\bump_draw(world) --this is the debug code for seeing collision boxes
+	camera\detach!
+	love.graphics.setColor(255, 255, 255, 255)
+	love.graphics.setFont(kenPixel)
+	love.graphics.print("Lives: "..player.p.lives, 12, 12)
+	love.graphics.print("Score: "..score, 130, 12)
+	Moan.draw!
+	--else 
+	--	love.graphics.setFont(love.graphics.newFont("lib/kenpixel.ttf", 30))
+	--	love.graphics.print("GAME OVER!", love.graphics.getWidth!/4, love.graphics.getHeight!/2)
+	--	love.graphics.print("Score: ".. score, love.graphics.getWidth!/4, love.graphics.getHeight!/1.5)
+	--	love.graphics.print("Hit enter to play again ", love.graphics.getWidth!/4, love.graphics.getHeight!/1.2)
 love.mousepressed = (x, y, button) ->
 	if button == 1 and sinceFire > .3 and not isDialogue
 		sinceFire = 0

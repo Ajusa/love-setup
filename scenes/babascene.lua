@@ -19,8 +19,7 @@ do
         "bump"
       })
       isDialogue = true
-      local score
-      player.p.x, player.p.y, player.p.lives, score = 9 * 64, 6 * 64, 5, 0
+      player.p.x, player.p.y, player.p.lives = 9 * 64, 6 * 64, 5
       _class_0.__parent.__init(self)
       self.baba = Entity({
         x = 7 * 64,

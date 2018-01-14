@@ -141,7 +141,10 @@ do
         }, function()
           return self.amir:speak("Young Man", {
             "You guys are regretting that? Now let me tell you what my mother did..."
-          }, function() end)
+          }, function()
+            isDialogue = false
+            STATE = America()
+          end)
         end)
       end)
     end,

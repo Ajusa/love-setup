@@ -4,7 +4,7 @@ class BabaScene extends BaseState
 		export world = bump.newWorld!
 		export map = sti("data/castle.lua", {"bump"})
 		export isDialogue = true
-		player.p.x, player.p.y, player.p.lives, score = 9*64, 6*64, 5, 0
+		player.p.x, player.p.y, player.p.lives = 9*64, 6*64, 5
 		super!
 		@baba = Entity x: 7*64, y: 6*64, w: 64, h: 64, speed: 200, image: love.graphics.newImage("images/Baba.png")
 		player\speak("Amir", {"Baba? Is that you? Where is my mother?"}, -> 

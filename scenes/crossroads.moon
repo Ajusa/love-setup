@@ -42,7 +42,8 @@ class CrossRoads2 extends BaseState
 		player\speak("Young Man", {"Wow, you've gone through a lot."}, -> 
 			@oedipus\speak("Oedipus", {"I too never had a mother's love."}, ->
 				@amir\speak("Young Man", {"You guys are regretting that? Now let me tell you what my mother did..."}, ->
-					
+					export isDialogue = false
+					export STATE = America!
 				)
 			)
 		)
