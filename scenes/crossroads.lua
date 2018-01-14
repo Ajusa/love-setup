@@ -184,7 +184,7 @@ do
     end,
     draw = function(self)
       _class_0.__parent.__base.draw(self)
-      self.oedipus:draw()
+      self.man:draw()
       return self.amir:draw()
     end
   }
@@ -198,7 +198,9 @@ do
       })
       isDialogue = true
       _class_0.__parent.__init(self)
-      player.p.x, player.p.y, player.p.lives, player.p.image = 40 * 64, 45 * 64, 5, love.graphics.newImage("images/Blind Oedipus.png")
+      player.p.x, player.p.y, player.p.lives, player.p.image = 40 * 64, 46 * 64, 5, love.graphics.newImage("images/Blind Oedipus.png")
+      player.p.g = anim8.newGrid(16, 16, player.p.image:getWidth(), player.p.image:getHeight())
+      player.p.anim = anim8.newAnimation(player.p.g(1, 1), 0.1)
       self.man = Entity({
         x = 45 * 64,
         y = 47 * 64,
@@ -224,7 +226,7 @@ do
           return self.man:speak("Young Man", {
             "Hey, she killed my brother when she bought him at an orphanage."
           }, function()
-            player:speak("Oedipus", {
+            return player:speak("Oedipus", {
               "I actually had a good reason for killing my mother. Well, she was also my wife.",
               "It all started with me killing my father..."
             }, function()
@@ -238,8 +240,6 @@ do
                 end)
               end)
             end)
-            isDialogue = false
-            STATE = America()
           end)
         end)
       end)
@@ -270,5 +270,132 @@ do
     _parent_0.__inherited(_parent_0, _class_0)
   end
   CrossRoads3 = _class_0
+end
+do
+  local _class_0
+  local _parent_0 = BaseState
+  local _base_0 = {
+    death = function(self)
+      score = score - 10
+      isDialogue = false
+      Timer.cancel(mommy.handle)
+      enemies = { }
+      player.p.lives = 5
+      return Mommy:speak("Mommy", {
+        "You see! Another bumble falls. Aren't we such good parents, Daddy?"
+      }, function()
+        return Mommy:speak("Game", {
+          "Your score is now " .. score .. ". Hit enter to redo the fight!"
+        }, function()
+          STATE = AmericaFight()
+        end)
+      end)
+    end,
+    update = function(self, dt)
+      player:update(dt)
+      mommy:update(dt)
+      if collision(mommy.p, 64, 64, player.p, 64, 64) then
+        self:death()
+      end
+      if mommy.p.lives < 1 then
+        isDialogue = true
+        Mommy:speak("Mommy", {
+          "Argh... you done killed me."
+        }, function()
+          enemies = { }
+          Timer.cancel(mommy.handle)
+          STATE = CrossRoads()
+        end)
+      end
+      if #enemies > 0 then
+        for i = #enemies, 1, -1 do
+          enemies[i]:update(dt, i)
+        end
+      end
+    end,
+    draw = function(self)
+      _class_0.__parent.__base.draw(self)
+      for i, v in ipairs(enemies) do
+        v:draw()
+      end
+      return laius:draw()
+    end
+  }
+  _base_0.__index = _base_0
+  setmetatable(_base_0, _parent_0.__base)
+  _class_0 = setmetatable({
+    __init = function(self)
+      isDialogue = true
+      world = bump.newWorld()
+      map = sti("data/Cross Roads.lua", {
+        "bump"
+      })
+      player.p.x, player.p.y, player.p.lives, player.p.image = 56 * 64, 49 * 64, 5, love.graphics.newImage("images/Oedipus.png")
+      player.p.g = anim8.newGrid(16, 16, player.p.image:getWidth(), player.p.image:getHeight())
+      player.p.anim = anim8.newAnimation(player.p.g('1-3', 1, '1-3', 2, '1-2', 2), 0.1)
+      laius = Entity({
+        x = 36 * 64,
+        y = 52 * 64,
+        w = 64,
+        h = 64,
+        speed = 200,
+        image = love.graphics.newImage("images/Laius.png")
+      })
+      player:moveTo(tile(39, 50), function()
+        return player:speak("Oedipus", {
+          "Get out of the way, old man."
+        }, function()
+          return laius:speak("Laius", {
+            "Do you have any idea who you are talking to, boy?"
+          }, function()
+            return player:speak("Oedipus", {
+              "If you don't get out of the way, I will remove you forcibly."
+            }, function()
+              return laius:speak("Laius", {
+                "You can try. Guards, take him!"
+              }, function()
+                isDialogue = false
+              end)
+            end)
+          end)
+        end)
+      end)
+      _class_0.__parent.__init(self)
+      mommy = Mommy({
+        x = 41 * 64,
+        y = 13 * 64,
+        dx = 0,
+        dy = 0,
+        speed = 100,
+        lives = 20,
+        image = love.graphics.newImage("images/Mommy.png")
+      })
+    end,
+    __base = _base_0,
+    __name = "CrossRoadsFight",
+    __parent = _parent_0
+  }, {
+    __index = function(cls, name)
+      local val = rawget(_base_0, name)
+      if val == nil then
+        local parent = rawget(cls, "__parent")
+        if parent then
+          return parent[name]
+        end
+      else
+        return val
+      end
+    end,
+    __call = function(cls, ...)
+      local _self_0 = setmetatable({}, _base_0)
+      cls.__init(_self_0, ...)
+      return _self_0
+    end
+  })
+  _base_0.__class = _class_0
+  if _parent_0.__inherited then
+    _parent_0.__inherited(_parent_0, _class_0)
+  end
+  CrossRoadsFight = _class_0
   return _class_0
 end
