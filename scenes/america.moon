@@ -69,7 +69,7 @@ class AmericaFight extends BaseState
 		@died = false
 		@cutScene = love.graphics.newVideo("cutscenes/Mommy-death.ogv")
 		super!
-		export mommy = Mommy x:24*64, y: 18*64, dx:0, dy:0, speed: 100, lives: 1, image: love.graphics.newImage("images/Mommy.png")
+		export mommy = Mommy x:24*64, y: 18*64, dx:0, dy:0, speed: 100, lives: 30, image: love.graphics.newImage("images/Mommy.png")
 		player\moveTo(tile(24, 22), -> mommy\talk!)
 		--player\moveTo(tile(43, 10))
 	death: =>

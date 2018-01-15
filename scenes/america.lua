@@ -270,7 +270,7 @@ do
         dx = 0,
         dy = 0,
         speed = 100,
-        lives = 1,
+        lives = 30,
         image = love.graphics.newImage("images/Mommy.png")
       })
       return player:moveTo(tile(24, 22), function()

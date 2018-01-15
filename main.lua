@@ -4,6 +4,7 @@ require("scenes/kitefight")
 require("scenes/crossroads")
 require("scenes/babascene")
 require("scenes/america")
+require("scenes/thebes")
 sinceFire = 0
 score = 0
 enemies = { }
@@ -231,7 +232,7 @@ love.load = function()
   bullets = { }
   dagger = love.graphics.newImage("images/dagger.png")
   cameraX, cameraY = camera:cameraCoords(player.p.x, player.p.y)
-  STATE = AmericaFight()
+  STATE = Thebes()
 end
 love.update = function(dt)
   Moan.update(dt)
