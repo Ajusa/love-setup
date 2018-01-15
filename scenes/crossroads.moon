@@ -79,10 +79,8 @@ class CrossRoads3 extends BaseState
 				)
 			)
 		)
-		--player\moveTo(tile(43, 10))
 	update: (dt) =>
 		player\update(dt)
-		--if love.keyboard.isDown("return") then export STATE = KiteFight!
 	draw: =>
 		super!
 		@man\draw!
@@ -107,7 +105,7 @@ class BossLaius extends Entity
 		if #enemies < 3
 			for i = 1, 10 do
 				enem = Enemy x: random(64*(25), (55)*64), y: random(64*(30), (30)*64), lives: 3, speed: 60, image: love.graphics.newImage("images/Knuckles.png")
-				enem.p.anim = anim8.newAnimation(enem.p.g(1,1, 1,2), 0.1)
+				enem.p.anim = anim8.newAnimation(enem.p.g(1,1, 1,2), 0.2)
 				table.insert(enemies, enem)
 	draw: =>
 		super!
@@ -161,7 +159,7 @@ class CrossRoadsFight extends BaseState
 			player\scramble(4)
 		if laius.p.lives < 1 
 			export isDialogue = true
-			laius\speak("Laius", {"Argh... you done killed me."}, ()->
+			laius\speak("Laius", {"Argh... may the gods curse you!"}, ()->
 				export enemies = {}
 				Timer.clear!
 				export STATE = CrossRoads!

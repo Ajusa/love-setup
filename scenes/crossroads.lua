@@ -293,7 +293,7 @@ do
             speed = 60,
             image = love.graphics.newImage("images/Knuckles.png")
           })
-          enem.p.anim = anim8.newAnimation(enem.p.g(1, 1, 1, 2), 0.1)
+          enem.p.anim = anim8.newAnimation(enem.p.g(1, 1, 1, 2), 0.2)
           table.insert(enemies, enem)
         end
       end
@@ -380,7 +380,7 @@ do
       if laius.p.lives < 1 then
         isDialogue = true
         laius:speak("Laius", {
-          "Argh... you done killed me."
+          "Argh... may the gods curse you!"
         }, function()
           enemies = { }
           Timer.clear()
