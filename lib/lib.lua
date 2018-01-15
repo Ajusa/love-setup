@@ -6,7 +6,6 @@ Moan = require('lib/Moan')
 anim8 = require('lib/anim8')
 kenPixel = love.graphics.newFont("lib/kenpixel.ttf", 18)
 love.graphics.setDefaultFilter("nearest")
---love.window.setFullscreen(true)
 Moan.font = kenPixel
 Moan.selectButton = "return"
 random = function(l, h)
@@ -28,6 +27,30 @@ walls = function(item, other)
   if other.p == nil then
     return "slide"
   end
+end
+shuffle = function(tbl)
+  local size = #tbl
+  for i = size, 1, -1 do
+    local rand = math.random(size)
+    tbl[i], tbl[rand] = tbl[rand], tbl[i]
+  end
+  return tbl
+end
+clone = function(t)
+  if type(t) ~= "table" then
+    return t
+  end
+  local meta = getmetatable(t)
+  local target = { }
+  for k, v in pairs(t) do
+    if type(v) == "table" then
+      target[k] = clone(v)
+    else
+      target[k] = v
+    end
+  end
+  setmetatable(target, meta)
+  return target
 end
 do
   local _class_0
@@ -63,9 +86,12 @@ do
         oncomplete = after
       })
     end,
-    follow = function(self, obj)
+    follow = function(self, obj, cons)
+      if cons == nil then
+        cons = 1
+      end
       local angle = math.atan2((obj.p.y - self.p.y), (obj.p.x - self.p.x))
-      self.p.dx, self.p.dy = self.p.speed * math.cos(angle), self.p.speed * math.sin(angle)
+      self.p.dx, self.p.dy = self.p.speed * cons * math.cos(angle), self.p.speed * cons * math.sin(angle)
     end
   }
   _base_0.__index = _base_0

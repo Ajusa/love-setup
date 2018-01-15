@@ -62,11 +62,8 @@ do
   local _class_0
   local _parent_0 = Entity
   local _base_0 = {
-    draw = function(self)
-      return love.graphics.draw(self.p.image, self.p.x, self.p.y, 0, 4, 4)
-    end,
     update = function(self, dt, i)
-      self.p.speed = self.p.speed + dt
+      self.p.speed = self.p.speed + (dt / 2)
       _class_0.__parent.follow(self, player)
       _class_0.__parent.__base.update(self, dt)
       self.p.x, self.p.y = world:move(self, self.p.x, self.p.y, walls)
@@ -90,7 +87,7 @@ do
   setmetatable(_base_0, _parent_0.__base)
   _class_0 = setmetatable({
     __init = function(self, p)
-      self.p = p
+      _class_0.__parent.__init(self, p)
       return world:add(self, self.p.x + 8, self.p.y + 8, 48, 48)
     end,
     __base = _base_0,
@@ -127,18 +124,24 @@ do
     draw = function(self)
       return self.p.anim:draw(self.p.image, self.p.x, self.p.y, 0, 4, 4)
     end,
+    scramble = function(self, time)
+      self.order = shuffle(self.order)
+      return Timer.after(time, function()
+        self.order = clone(self.base)
+      end)
+    end,
     update = function(self, dt)
       self.p.anim:update(dt)
-      if love.keyboard.isDown("a") then
+      if love.keyboard.isDown(self.order[1]) then
         self.p.x, self.p.y = world:move(self, self.p.x - self.p.speed * dt, self.p.y, walls)
       end
-      if love.keyboard.isDown("d") then
+      if love.keyboard.isDown(self.order[2]) then
         self.p.x, self.p.y = world:move(self, self.p.x + self.p.speed * dt, self.p.y, walls)
       end
-      if love.keyboard.isDown("w") then
+      if love.keyboard.isDown(self.order[3]) then
         self.p.x, self.p.y = world:move(self, self.p.x, self.p.y - self.p.speed * dt, walls)
       end
-      if love.keyboard.isDown("s") then
+      if love.keyboard.isDown(self.order[4]) then
         self.p.x, self.p.y = world:move(self, self.p.x, self.p.y + self.p.speed * dt, walls)
       end
       for i = #enemies, 1, -1 do
@@ -154,6 +157,18 @@ do
   _class_0 = setmetatable({
     __init = function(self, p)
       self.p = p
+      self.order = {
+        "a",
+        "d",
+        "w",
+        "s"
+      }
+      self.base = {
+        "a",
+        "d",
+        "w",
+        "s"
+      }
       self.p.g = anim8.newGrid(16, 16, self.p.image:getWidth(), self.p.image:getHeight())
       self.p.anim = anim8.newAnimation(self.p.g('1-2', 1, '1-2', 2), 0.1)
     end,
@@ -185,7 +200,7 @@ do
   Player = _class_0
 end
 shoot = function()
-  if sinceFire > .3 and not isDialogue then
+  if sinceFire > .5 and not isDialogue then
     local x, y = love.mouse.getPosition()
     sinceFire = 0
     local startX, startY = player.p.x + 32, player.p.y + 32

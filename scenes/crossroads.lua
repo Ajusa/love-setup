@@ -277,7 +277,7 @@ do
   local _base_0 = {
     update = function(self, dt)
       _class_0.__parent.__base.update(self, dt)
-      _class_0.__parent.follow(self, player)
+      _class_0.__parent.follow(self, player, self.direction)
       for i = #bullets, 1, -1 do
         if collision(bullets[i].p, 20, 40, self.p, 64, 64) then
           self.p.lives = self.p.lives - 1
@@ -286,13 +286,15 @@ do
       end
       if #enemies < 3 then
         for i = 1, 10 do
-          table.insert(enemies, Enemy({
-            x = random(64 * (2), (32) * 64),
-            y = random(64 * (2), (map.height - 2) * 64),
-            lives = 2,
+          local enem = Enemy({
+            x = random(64 * (25), (55) * 64),
+            y = random(64 * (30), (30) * 64),
+            lives = 3,
             speed = 60,
             image = love.graphics.newImage("images/Knuckles.png")
-          }))
+          })
+          enem.p.anim = anim8.newAnimation(enem.p.g(1, 1, 1, 2), 0.1)
+          table.insert(enemies, enem)
         end
       end
     end,
@@ -306,7 +308,15 @@ do
   setmetatable(_base_0, _parent_0.__base)
   _class_0 = setmetatable({
     __init = function(self, p)
-      return _class_0.__parent.__init(self, p)
+      _class_0.__parent.__init(self, p)
+      self.direction = 1
+      Timer.every(10.01, function()
+        self.p.speed = 300
+      end)
+      return Timer.every(5, function()
+        self.p.speed = 100
+        self.p.lives = self.p.lives + 1
+      end)
     end,
     __base = _base_0,
     __name = "BossLaius",
@@ -341,25 +351,31 @@ do
   local _base_0 = {
     death = function(self)
       score = score - 10
-      isDialogue = false
-      Timer.cancel(mommy.handle)
+      isDialogue = true
+      Timer.clear()
       enemies = { }
       player.p.lives = 5
-      return laius:speak("Mommy", {
-        "You see! Another bumble falls. Aren't we such good parents, Daddy?"
+      return laius:speak("Laius", {
+        "Fool! No man is a match for the King of Thebes!"
       }, function()
         return laius:speak("Game", {
           "Your score is now " .. score .. ". Hit enter to redo the fight!"
         }, function()
-          STATE = AmericaFight()
+          STATE = CrossRoadsFight()
         end)
       end)
     end,
     update = function(self, dt)
       player:update(dt)
       laius:update(dt)
-      if collision(laius.p, 64, 64, player.p, 64, 64) then
-        self:death()
+      if collision(laius.p, 64, 64, player.p, 64, 64) and not recentScramble then
+        self.recentScramble = true
+        laius.direction = -1
+        Timer.after(1, function()
+          self.recentScramble = false
+          laius.direction = 1
+        end)
+        player:scramble(4)
       end
       if laius.p.lives < 1 then
         isDialogue = true
@@ -367,7 +383,7 @@ do
           "Argh... you done killed me."
         }, function()
           enemies = { }
-          Timer.cancel(laius.handle)
+          Timer.clear()
           STATE = CrossRoads()
         end)
       end
@@ -394,9 +410,11 @@ do
       map = sti("data/Cross Roads.lua", {
         "bump"
       })
+      self.recentScramble = false
       player.p.x, player.p.y, player.p.lives, player.p.image = 56 * 64, 49 * 64, 5, love.graphics.newImage("images/Oedipus.png")
       player.p.g = anim8.newGrid(16, 16, player.p.image:getWidth(), player.p.image:getHeight())
       player.p.anim = anim8.newAnimation(player.p.g('1-3', 1, '1-3', 2, '1-2', 2), 0.1)
+      player:scramble(.01)
       _class_0.__parent.__init(self)
       laius = Entity({
         x = 36 * 64,
@@ -405,7 +423,7 @@ do
         dy = 0,
         w = 64,
         h = 64,
-        speed = 200,
+        speed = 100,
         image = love.graphics.newImage("images/Laius.png"),
         lives = 30
       })

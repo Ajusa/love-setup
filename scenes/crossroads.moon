@@ -90,14 +90,25 @@ class CrossRoads3 extends BaseState
 class BossLaius extends Entity
 	new: (p) => 
 		super p
+		@direction = 1
+		Timer.every(10.01, ->
+			@p.speed = 300
+		)
+		Timer.every(5, ->
+			@p.speed = 100
+			@p.lives += 1
+		)
 	update: (dt) =>
 		super dt
-		super\follow(player)
+		super\follow(player, @direction)
 		for i=#bullets,1,-1 do if collision(bullets[i].p, 20, 40, @p, 64, 64) then 
 				@p.lives -= 1
 				table.remove(bullets, i)
 		if #enemies < 3
-			for i = 1, 10 do table.insert(enemies, Enemy x: random(64*(2), (32)*64), y: random(64*(2), (map.height-2)*64), lives: 2, speed: 60, image: love.graphics.newImage("images/Knuckles.png"))
+			for i = 1, 10 do
+				enem = Enemy x: random(64*(25), (55)*64), y: random(64*(30), (30)*64), lives: 3, speed: 60, image: love.graphics.newImage("images/Knuckles.png")
+				enem.p.anim = anim8.newAnimation(enem.p.g(1,1, 1,2), 0.1)
+				table.insert(enemies, enem)
 	draw: =>
 		super!
 		love.graphics.setFont(kenPixel)
@@ -107,11 +118,13 @@ class CrossRoadsFight extends BaseState
 		export isDialogue = true
 		export world = bump.newWorld!
 		export map = sti("data/Cross Roads.lua", {"bump"})
+		@recentScramble = false
 		player.p.x, player.p.y, player.p.lives, player.p.image = 56*64, 49*64, 5, love.graphics.newImage("images/Oedipus.png")
 		player.p.g = anim8.newGrid(16, 16, player.p.image\getWidth!, player.p.image\getHeight!)
 		player.p.anim = anim8.newAnimation(player.p.g('1-3',1, '1-3',2, '1-2',2), 0.1)
+		player\scramble(.01)
 		super!
-		export laius = Entity x: 36*64, y: 52*64, dx: 0, dy: 0, w: 64, h: 64, speed: 200, image: love.graphics.newImage("images/Laius.png"), lives: 30
+		export laius = Entity x: 36*64, y: 52*64, dx: 0, dy: 0, w: 64, h: 64, speed: 100, image: love.graphics.newImage("images/Laius.png"), lives: 30
 		player\moveTo(tile(39, 50), ->
 			player\speak("Oedipus", {"Get out of the way, old man."},  ->
 				laius\speak("Laius", {"Do you have any idea who you are talking to, boy?"}, ->
@@ -126,24 +139,31 @@ class CrossRoadsFight extends BaseState
 		)
 	death: =>
 		export score =  score - 10
-		export isDialogue = false
-		Timer.cancel(mommy.handle)
+		export isDialogue = true
+		Timer.clear!
 		export enemies = {}
 		player.p.lives = 5
-		laius\speak("Mommy", {"You see! Another bumble falls. Aren't we such good parents, Daddy?"}, ()->
+		laius\speak("Laius", {"Fool! No man is a match for the King of Thebes!"}, ()->
 			laius\speak("Game", {"Your score is now " .. score..". Hit enter to redo the fight!"}, ()->
-				export STATE = AmericaFight!
+				export STATE = CrossRoadsFight!
 			)
 		)
 	update: (dt) =>
 		player\update(dt)
 		laius\update(dt)
-		if collision(laius.p, 64, 64, player.p, 64, 64) then self\death!
+		if collision(laius.p, 64, 64, player.p, 64, 64) and not recentScramble then
+			@recentScramble = true
+			laius.direction = -1
+			Timer.after(1, -> 
+				@recentScramble = false
+				laius.direction = 1
+			)
+			player\scramble(4)
 		if laius.p.lives < 1 
 			export isDialogue = true
 			laius\speak("Laius", {"Argh... you done killed me."}, ()->
 				export enemies = {}
-				Timer.cancel(laius.handle)
+				Timer.clear!
 				export STATE = CrossRoads!
 			)
 		if #enemies > 0

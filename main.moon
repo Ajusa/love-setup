@@ -20,11 +20,10 @@ class Dagger extends Entity
 		super dt
 class Enemy extends Entity
 	new: (p) => 
-		@p = p
+		super p
 		world\add(self, @p.x+8, @p.y+8, 48, 48)
-	draw: => love.graphics.draw(@p.image, @p.x, @p.y, 0,4,4)
 	update: (dt, i) =>
-		@p.speed += dt
+		@p.speed += dt/2
 		super\follow(player)
 		super dt
 		@p.x, @p.y = world\move(self,@p.x, @p.y, walls)
@@ -39,20 +38,25 @@ class Enemy extends Entity
 class Player extends Entity	
 	new: (p) =>
 		@p = p
+		@order = {"a", "d", "w", "s"}
+		@base = {"a", "d", "w", "s"}
 		@p.g = anim8.newGrid(16, 16, @p.image\getWidth!, @p.image\getHeight!)
 		@p.anim = anim8.newAnimation(@p.g('1-2',1, '1-2',2), 0.1)
 	draw: => @p.anim\draw(@p.image, @p.x, @p.y, 0,4,4)
+	scramble: (time) =>
+		@order = shuffle(@order)
+		Timer.after(time, -> @order = clone(@base))
 	update: (dt) =>
 		@p.anim\update(dt)
-		if love.keyboard.isDown("a") then @p.x, @p.y = world\move(self, @p.x - @p.speed*dt,@p.y, walls)
-		if love.keyboard.isDown("d") then @p.x, @p.y = world\move(self, @p.x + @p.speed*dt,@p.y, walls)
-		if love.keyboard.isDown("w") then @p.x, @p.y = world\move(self, @p.x, @p.y - @p.speed*dt, walls)
-		if love.keyboard.isDown("s") then @p.x, @p.y = world\move(self, @p.x, @p.y + @p.speed*dt, walls)
+		if love.keyboard.isDown(@order[1]) then @p.x, @p.y = world\move(self, @p.x - @p.speed*dt,@p.y, walls)
+		if love.keyboard.isDown(@order[2]) then @p.x, @p.y = world\move(self, @p.x + @p.speed*dt,@p.y, walls)
+		if love.keyboard.isDown(@order[3]) then @p.x, @p.y = world\move(self, @p.x, @p.y - @p.speed*dt, walls)
+		if love.keyboard.isDown(@order[4]) then @p.x, @p.y = world\move(self, @p.x, @p.y + @p.speed*dt, walls)
 		for i=#enemies,1,-1 do if fullCollision(enemies[i].p.x + 8, enemies[i].p.y + 8, 48, 48, @p.x, @p.y, 64, 64) -- the 8's are for a smaller hitbox
 				@p.lives -= 1
 				table.remove(enemies, i)
 shoot = ->
-	if sinceFire > .3 and not isDialogue
+	if sinceFire > .5 and not isDialogue
 		x, y = love.mouse.getPosition()
 		sinceFire = 0
 		startX, startY = player.p.x + 32, player.p.y + 32
