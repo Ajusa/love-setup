@@ -140,7 +140,7 @@ do
             x = random(64 * (2), (32) * 64),
             y = random(64 * (2), (map.height - 2) * 64),
             lives = 2,
-            speed = 60,
+            speed = 70,
             image = love.graphics.newImage("images/Daddy.png")
           }))
         end
@@ -206,7 +206,7 @@ do
         "You see! Another bumble falls. Aren't we such good parents, Daddy?"
       }, function()
         return Mommy:speak("Game", {
-          "Your score is now " .. score .. ". Hit enter to redo the fight!"
+          "Your score is now " .. score .. ". Click to redo the fight!"
         }, function()
           STATE = AmericaFight()
         end)
@@ -225,7 +225,7 @@ do
         }, function()
           enemies = { }
           Timer.cancel(mommy.handle)
-          STATE = CrossRoads()
+          STATE = CrossRoads3()
         end)
       end
       if #enemies > 0 then
@@ -258,7 +258,7 @@ do
         dx = 0,
         dy = 0,
         speed = 100,
-        lives = 20,
+        lives = 30,
         image = love.graphics.newImage("images/Mommy.png")
       })
       return mommy:talk()

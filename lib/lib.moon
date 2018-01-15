@@ -7,9 +7,10 @@ Moan = require('lib/Moan')
 anim8 = require('lib/anim8')
 kenPixel = love.graphics.newFont("lib/kenpixel.ttf", 18)
 love.graphics.setDefaultFilter("nearest")
---love.window.setFullscreen(true)
+love.window.setFullscreen(true)
 Moan.font = kenPixel
-Moan.selectButton = "return"
+Moan.selectButton = 1
+Moan.setSpeed(0.05)
 random = (l, h) -> love.math.random(l, h)
 tile = (x, y) -> {x: x*64, y: y*64}
 fullCollision = (x1,y1,w1,h1, x2,y2,w2,h2) -> x1 < x2+w2 and x2 < x1+w1 and y1 < y2+h2 and y2 < y1+h1

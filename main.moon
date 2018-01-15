@@ -23,7 +23,7 @@ class Enemy extends Entity
 		super p
 		world\add(self, @p.x+8, @p.y+8, 48, 48)
 	update: (dt, i) =>
-		@p.speed += dt/2
+		@p.speed += dt
 		super\follow(player)
 		super dt
 		@p.x, @p.y = world\move(self,@p.x, @p.y, walls)
@@ -71,7 +71,7 @@ love.load = ->
 	export bullets = {}
 	export dagger = love.graphics.newImage("images/dagger.png")
 	export cameraX,cameraY = camera\cameraCoords(player.p.x, player.p.y)
-	export STATE = CrossRoadsFight!
+	export STATE = CrossRoads!
 love.update = (dt) ->
 	Moan.update(dt)
 	Timer.update(dt)
@@ -102,3 +102,4 @@ love.draw = ->
 	--	love.graphics.print("Hit enter to play again ", love.graphics.getWidth!/4, love.graphics.getHeight!/1.2)
 
 love.keyreleased = (key) -> Moan.keyreleased(key)
+love.mousereleased = (x, y, key) -> Moan.keyreleased(key)

@@ -52,7 +52,7 @@ class BossMommy extends Entity
 				table.remove(bullets, i)
 	addMinions: =>
 		if #enemies < 100
-			for i = 1, 10 do table.insert(enemies, Enemy x: random(64*(2), (32)*64), y: random(64*(2), (map.height-2)*64), lives: 2, speed: 60, image: love.graphics.newImage("images/Daddy.png"))
+			for i = 1, 10 do table.insert(enemies, Enemy x: random(64*(2), (32)*64), y: random(64*(2), (map.height-2)*64), lives: 2, speed: 70, image: love.graphics.newImage("images/Daddy.png"))
 	draw: =>
 		super!
 		love.graphics.setFont(kenPixel)
@@ -64,7 +64,7 @@ class AmericaFight extends BaseState
 		export map = sti("data/testmap.lua", {"bump"})
 		player.p.x, player.p.y, player.p.lives = 38*64, 13*64, 5
 		super!
-		export mommy = Mommy x:41*64, y: 13*64, dx:0, dy:0, speed: 100, lives: 20, image: love.graphics.newImage("images/Mommy.png")
+		export mommy = Mommy x:41*64, y: 13*64, dx:0, dy:0, speed: 100, lives: 30, image: love.graphics.newImage("images/Mommy.png")
 		mommy\talk!
 		--player\moveTo(tile(43, 10))
 	death: =>
@@ -74,7 +74,7 @@ class AmericaFight extends BaseState
 		export enemies = {}
 		player.p.lives = 5
 		Mommy\speak("Mommy", {"You see! Another bumble falls. Aren't we such good parents, Daddy?"}, ()->
-			Mommy\speak("Game", {"Your score is now " .. score..". Hit enter to redo the fight!"}, ()->
+			Mommy\speak("Game", {"Your score is now " .. score..". Click to redo the fight!"}, ()->
 				export STATE = AmericaFight!
 			)
 		)
@@ -87,7 +87,7 @@ class AmericaFight extends BaseState
 			Mommy\speak("Mommy", {"Argh... you done killed me."}, ()->
 				export enemies = {}
 				Timer.cancel(mommy.handle)
-				export STATE = CrossRoads!
+				export STATE = CrossRoads3!
 			)
 		if #enemies > 0
 			for i=#enemies,1,-1 do enemies[i]\update(dt,i)

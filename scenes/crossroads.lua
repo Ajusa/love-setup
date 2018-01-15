@@ -288,9 +288,9 @@ do
         for i = 1, 10 do
           local enem = Enemy({
             x = random(64 * (25), (55) * 64),
-            y = random(64 * (30), (30) * 64),
+            y = random(64 * (30), (60) * 64),
             lives = 3,
-            speed = 60,
+            speed = 80,
             image = love.graphics.newImage("images/Knuckles.png")
           })
           enem.p.anim = anim8.newAnimation(enem.p.g(1, 1, 1, 2), 0.2)
@@ -315,7 +315,7 @@ do
       end)
       return Timer.every(5, function()
         self.p.speed = 100
-        self.p.lives = self.p.lives + 1
+        self.p.lives = self.p.lives + 2
       end)
     end,
     __base = _base_0,
@@ -359,7 +359,7 @@ do
         "Fool! No man is a match for the King of Thebes!"
       }, function()
         return laius:speak("Game", {
-          "Your score is now " .. score .. ". Hit enter to redo the fight!"
+          "Your score is now " .. score .. ". Click to redo the fight!"
         }, function()
           STATE = CrossRoadsFight()
         end)
@@ -371,7 +371,7 @@ do
       if collision(laius.p, 64, 64, player.p, 64, 64) and not recentScramble then
         self.recentScramble = true
         laius.direction = -1
-        Timer.after(1, function()
+        Timer.after(3, function()
           self.recentScramble = false
           laius.direction = 1
         end)

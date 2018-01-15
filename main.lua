@@ -63,7 +63,7 @@ do
   local _parent_0 = Entity
   local _base_0 = {
     update = function(self, dt, i)
-      self.p.speed = self.p.speed + (dt / 2)
+      self.p.speed = self.p.speed + dt
       _class_0.__parent.follow(self, player)
       _class_0.__parent.__base.update(self, dt)
       self.p.x, self.p.y = world:move(self, self.p.x, self.p.y, walls)
@@ -231,7 +231,7 @@ love.load = function()
   bullets = { }
   dagger = love.graphics.newImage("images/dagger.png")
   cameraX, cameraY = camera:cameraCoords(player.p.x, player.p.y)
-  STATE = CrossRoadsFight()
+  STATE = CrossRoads()
 end
 love.update = function(dt)
   Moan.update(dt)
@@ -264,5 +264,8 @@ love.draw = function()
   return Moan.draw()
 end
 love.keyreleased = function(key)
+  return Moan.keyreleased(key)
+end
+love.mousereleased = function(x, y, key)
   return Moan.keyreleased(key)
 end

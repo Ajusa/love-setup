@@ -94,7 +94,7 @@ class BossLaius extends Entity
 		)
 		Timer.every(5, ->
 			@p.speed = 100
-			@p.lives += 1
+			@p.lives += 2
 		)
 	update: (dt) =>
 		super dt
@@ -104,7 +104,7 @@ class BossLaius extends Entity
 				table.remove(bullets, i)
 		if #enemies < 3
 			for i = 1, 10 do
-				enem = Enemy x: random(64*(25), (55)*64), y: random(64*(30), (30)*64), lives: 3, speed: 60, image: love.graphics.newImage("images/Knuckles.png")
+				enem = Enemy x: random(64*(25), (55)*64), y: random(64*(30), (60)*64), lives: 3, speed: 80, image: love.graphics.newImage("images/Knuckles.png")
 				enem.p.anim = anim8.newAnimation(enem.p.g(1,1, 1,2), 0.2)
 				table.insert(enemies, enem)
 	draw: =>
@@ -142,7 +142,7 @@ class CrossRoadsFight extends BaseState
 		export enemies = {}
 		player.p.lives = 5
 		laius\speak("Laius", {"Fool! No man is a match for the King of Thebes!"}, ()->
-			laius\speak("Game", {"Your score is now " .. score..". Hit enter to redo the fight!"}, ()->
+			laius\speak("Game", {"Your score is now " .. score..". Click to redo the fight!"}, ()->
 				export STATE = CrossRoadsFight!
 			)
 		)
@@ -152,7 +152,7 @@ class CrossRoadsFight extends BaseState
 		if collision(laius.p, 64, 64, player.p, 64, 64) and not recentScramble then
 			@recentScramble = true
 			laius.direction = -1
-			Timer.after(1, -> 
+			Timer.after(3, -> 
 				@recentScramble = false
 				laius.direction = 1
 			)

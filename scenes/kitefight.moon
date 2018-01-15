@@ -8,7 +8,7 @@ class KiteFight extends BaseState
 		super!
 		export assef =  Assef x:43*64, y: 13*64, speed: 175, image: love.graphics.newImage("images/Assef.png")
 		@died = false
-		@cutScene = love.graphics.newVideo("cutscenes/Assef-Death.ogv") --switch this to the right cutscene
+		@cutScene = love.graphics.newVideo("cutscenes/Assef-Death.ogv")
 		Moan.speak("Amir", {"I decided to walk in to the building, hoping to find Sohrab"}, 
 		{oncomplete: -> 
 			export world = bump.newWorld!
