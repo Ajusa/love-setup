@@ -69,7 +69,7 @@ class CrossRoads3 extends BaseState
 		player\speak("Oedipus", {"Child, you killed your own mother?"}, -> 
 			@amir\speak("Amir", {"That is pretty dark."}, ->
 				@man\speak("Young Man", {"Hey, she killed my brother when she bought him at an orphanage."}, ->
-					player\speak("Oedipus", {"I actually had a good reason for killing my mother. Well, she was also my wife.", "It all started with me killing my father..."}, -> 
+					player\speak("Oedipus", {"I actually had a good reason for killing my mother. Well, she was also my wife.", "It all started with me killing my father many years ago..."}, -> 
 						@amir\speak("Amir", {"..."}, ->
 							@man\speak("Young Man", {"..."}, ->
 								export STATE = CrossRoadsFight!
@@ -117,6 +117,8 @@ class CrossRoadsFight extends BaseState
 		export world = bump.newWorld!
 		export map = sti("data/Cross Roads.lua", {"bump"})
 		@recentScramble = false
+		@died = false
+		@cutScene = love.graphics.newVideo("cutscenes/Jocasta.ogv")
 		player.p.x, player.p.y, player.p.lives, player.p.image = 56*64, 49*64, 5, love.graphics.newImage("images/Oedipus.png")
 		player.p.g = anim8.newGrid(16, 16, player.p.image\getWidth!, player.p.image\getHeight!)
 		player.p.anim = anim8.newAnimation(player.p.g('1-3',1, '1-3',2, '1-2',2), 0.1)
@@ -161,13 +163,20 @@ class CrossRoadsFight extends BaseState
 			export isDialogue = true
 			laius\speak("Laius", {"Argh... may the gods curse you!"}, ()->
 				export enemies = {}
+				@died = true
+				@cutScene\play!
 				Timer.clear!
-				export STATE = CrossRoads!
+				
 			)
 		if #enemies > 0
 			for i=#enemies,1,-1 do enemies[i]\update(dt,i)
 		--if love.keyboard.isDown("return") then export STATE = KiteFight!
 	draw: =>
-		super!
-		for i,v in ipairs(enemies) do v\draw!
-		laius\draw!
+		if @died
+			cX,cY = camera\worldCoords(love.graphics.getWidth!/2, 0)
+			love.graphics.draw(@cutScene, cX, cY, 0, love.graphics.getHeight!/@cutScene\getHeight!, love.graphics.getHeight!/@cutScene\getHeight!, @cutScene\getWidth!/2)
+			if not @cutScene\isPlaying! then export STATE = Thebes!
+		else
+			super!
+			for i,v in ipairs(enemies) do v\draw!
+			laius\draw!

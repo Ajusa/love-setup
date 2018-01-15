@@ -228,7 +228,7 @@ do
           }, function()
             return player:speak("Oedipus", {
               "I actually had a good reason for killing my mother. Well, she was also my wife.",
-              "It all started with me killing my father..."
+              "It all started with me killing my father many years ago..."
             }, function()
               return self.amir:speak("Amir", {
                 "..."
@@ -383,8 +383,9 @@ do
           "Argh... may the gods curse you!"
         }, function()
           enemies = { }
-          Timer.clear()
-          STATE = CrossRoads()
+          self.died = true
+          self.cutScene:play()
+          return Timer.clear()
         end)
       end
       if #enemies > 0 then
@@ -394,11 +395,19 @@ do
       end
     end,
     draw = function(self)
-      _class_0.__parent.__base.draw(self)
-      for i, v in ipairs(enemies) do
-        v:draw()
+      if self.died then
+        local cX, cY = camera:worldCoords(love.graphics.getWidth() / 2, 0)
+        love.graphics.draw(self.cutScene, cX, cY, 0, love.graphics.getHeight() / self.cutScene:getHeight(), love.graphics.getHeight() / self.cutScene:getHeight(), self.cutScene:getWidth() / 2)
+        if not self.cutScene:isPlaying() then
+          STATE = Thebes()
+        end
+      else
+        _class_0.__parent.__base.draw(self)
+        for i, v in ipairs(enemies) do
+          v:draw()
+        end
+        return laius:draw()
       end
-      return laius:draw()
     end
   }
   _base_0.__index = _base_0
@@ -411,6 +420,8 @@ do
         "bump"
       })
       self.recentScramble = false
+      self.died = false
+      self.cutScene = love.graphics.newVideo("cutscenes/Jocasta.ogv")
       player.p.x, player.p.y, player.p.lives, player.p.image = 56 * 64, 49 * 64, 5, love.graphics.newImage("images/Oedipus.png")
       player.p.g = anim8.newGrid(16, 16, player.p.image:getWidth(), player.p.image:getHeight())
       player.p.anim = anim8.newAnimation(player.p.g('1-3', 1, '1-3', 2, '1-2', 2), 0.1)

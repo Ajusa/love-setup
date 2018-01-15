@@ -222,11 +222,12 @@ do
       if mommy.p.lives < 1 then
         isDialogue = true
         Mommy:speak("Mommy", {
-          "Argh... you done killed me."
+          "NOOOO!"
         }, function()
           enemies = { }
           Timer.cancel(mommy.handle)
-          STATE = CrossRoads3()
+          self.died = true
+          return self.cutScene:play()
         end)
       end
       if #enemies > 0 then
@@ -236,11 +237,19 @@ do
       end
     end,
     draw = function(self)
-      _class_0.__parent.__base.draw(self)
-      for i, v in ipairs(enemies) do
-        v:draw()
+      if self.died then
+        local cX, cY = camera:worldCoords(love.graphics.getWidth() / 2, 0)
+        love.graphics.draw(self.cutScene, cX, cY, 0, love.graphics.getHeight() / self.cutScene:getHeight(), love.graphics.getHeight() / self.cutScene:getHeight(), self.cutScene:getWidth() / 2)
+        if not self.cutScene:isPlaying() then
+          STATE = CrossRoads3()
+        end
+      else
+        _class_0.__parent.__base.draw(self)
+        for i, v in ipairs(enemies) do
+          v:draw()
+        end
+        return mommy:draw()
       end
-      return mommy:draw()
     end
   }
   _base_0.__index = _base_0
@@ -252,6 +261,8 @@ do
         "bump"
       })
       player.p.x, player.p.y, player.p.lives = 24 * 64, 48 * 64, 5
+      self.died = false
+      self.cutScene = love.graphics.newVideo("cutscenes/Mommy-death.ogv")
       _class_0.__parent.__init(self)
       mommy = Mommy({
         x = 24 * 64,
@@ -259,7 +270,7 @@ do
         dx = 0,
         dy = 0,
         speed = 100,
-        lives = 30,
+        lives = 1,
         image = love.graphics.newImage("images/Mommy.png")
       })
       return player:moveTo(tile(24, 22), function()

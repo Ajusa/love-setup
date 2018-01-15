@@ -2,22 +2,27 @@ export *
 class Thebes extends BaseState
 	new: =>
 		export world = bump.newWorld!
-		export map = sti("data/Dark Room.lua", {"bump"})
-		player.p.x, player.p.y, player.p.lives = 14*64, 2*64, 5
+		export map = sti("data/Thebes.lua", {"bump"})
+		player.p.x, player.p.y, player.p.lives = 23*64, 48*64, 5
 		super!
-		@tree = Entity x: 21*64, y: 18*64, w: 64, h: 64, image: love.graphics.newImage("images/Pomegranate Tree.png")
 		export isDialogue = true
-		player\speak("Amir", {"Where am I? Better find the exit..."}, -> export isDialogue = false)
-		--player\moveTo(tile(43, 10))
+		player\speak("Oedipus", {"I wonder if the servant has arrived. Maybe he is talking to Jocasta in the palace, right now?"}, -> export isDialogue = false)
 	update: (dt) =>
 		player\update(dt)
-		for i=#bullets,1,-1 do if collision(bullets[i].p, 20, 40, @tree.p, 64, 64) then
-			export isDialogue = true
-			@tree\speak("Tree", {"Amir and Hassan, the sultans of Kabul."}, -> 
-				export isDialogue = false
-			)
-		if collision(player.p, 64, 64, tile(13, 48), 192, 64) then export STATE = KiteFight! --needs to be changed to kabul
+		if collision(player.p, 64, 64, tile(22, 3), 64*4, 64) then export STATE = Palace! --needs to be changed to kabul
 	draw: =>
 		super!
-		@tree\draw!
+class Palace extends BaseState
+	new: =>
+		export world = bump.newWorld!
+		export map = sti("data/Oedipus's Palace.lua", {"bump"})
+		player.p.x, player.p.y, player.p.lives = 24*64, 46*64, 5
+		super!
+		export isDialogue = true
+		player\speak("Oedipus", {"Where is the wife, no wife, the teeming womb -- That bore a double harvest, me and mine?"}, -> export isDialogue = false)
+	update: (dt) =>
+		player\update(dt)
+		if collision(player.p, 64, 64, tile(22, 3), 64*4, 64) then export STATE = KiteFight!
+	draw: =>
+		super!
 

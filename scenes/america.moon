@@ -66,8 +66,10 @@ class AmericaFight extends BaseState
 		export world = bump.newWorld!
 		export map = sti("data/American Dream Apartment.lua", {"bump"})
 		player.p.x, player.p.y, player.p.lives = 24*64, 48*64, 5
+		@died = false
+		@cutScene = love.graphics.newVideo("cutscenes/Mommy-death.ogv")
 		super!
-		export mommy = Mommy x:24*64, y: 18*64, dx:0, dy:0, speed: 100, lives: 30, image: love.graphics.newImage("images/Mommy.png")
+		export mommy = Mommy x:24*64, y: 18*64, dx:0, dy:0, speed: 100, lives: 1, image: love.graphics.newImage("images/Mommy.png")
 		player\moveTo(tile(24, 22), -> mommy\talk!)
 		--player\moveTo(tile(43, 10))
 	death: =>
@@ -87,15 +89,22 @@ class AmericaFight extends BaseState
 		if collision(mommy.p, 64, 64, player.p, 64, 64) then self\death!
 		if mommy.p.lives < 1 
 			export isDialogue = true
-			Mommy\speak("Mommy", {"Argh... you done killed me."}, ()->
+			Mommy\speak("Mommy", {"NOOOO!"}, ()->
 				export enemies = {}
 				Timer.cancel(mommy.handle)
-				export STATE = CrossRoads3!
+				@died = true
+				@cutScene\play!
+				
 			)
 		if #enemies > 0
 			for i=#enemies,1,-1 do enemies[i]\update(dt,i)
 		--if love.keyboard.isDown("return") then export STATE = KiteFight!
 	draw: =>
-		super!
-		for i,v in ipairs(enemies) do v\draw!
-		mommy\draw!
+		if @died
+			cX,cY = camera\worldCoords(love.graphics.getWidth!/2, 0)
+			love.graphics.draw(@cutScene, cX, cY, 0, love.graphics.getHeight!/@cutScene\getHeight!, love.graphics.getHeight!/@cutScene\getHeight!, @cutScene\getWidth!/2)
+			if not @cutScene\isPlaying! then export STATE = CrossRoads3!
+		else
+			super!
+			for i,v in ipairs(enemies) do v\draw!
+			mommy\draw!
