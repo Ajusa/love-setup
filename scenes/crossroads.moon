@@ -87,6 +87,21 @@ class CrossRoads3 extends BaseState
 		super!
 		@man\draw!
 		@amir\draw!
+class BossLaius extends Entity
+	new: (p) => 
+		super p
+	update: (dt) =>
+		super dt
+		super\follow(player)
+		for i=#bullets,1,-1 do if collision(bullets[i].p, 20, 40, @p, 64, 64) then 
+				@p.lives -= 1
+				table.remove(bullets, i)
+		if #enemies < 3
+			for i = 1, 10 do table.insert(enemies, Enemy x: random(64*(2), (32)*64), y: random(64*(2), (map.height-2)*64), lives: 2, speed: 60, image: love.graphics.newImage("images/Knuckles.png"))
+	draw: =>
+		super!
+		love.graphics.setFont(kenPixel)
+		love.graphics.print("Lives: "..@p.lives, @p.x, @p.y-30)
 class CrossRoadsFight extends BaseState
 	new: =>
 		export isDialogue = true
@@ -95,42 +110,40 @@ class CrossRoadsFight extends BaseState
 		player.p.x, player.p.y, player.p.lives, player.p.image = 56*64, 49*64, 5, love.graphics.newImage("images/Oedipus.png")
 		player.p.g = anim8.newGrid(16, 16, player.p.image\getWidth!, player.p.image\getHeight!)
 		player.p.anim = anim8.newAnimation(player.p.g('1-3',1, '1-3',2, '1-2',2), 0.1)
-		export laius = Entity x: 36*64, y: 52*64, w: 64, h: 64, speed: 200, image: love.graphics.newImage("images/Laius.png")
+		super!
+		export laius = Entity x: 36*64, y: 52*64, dx: 0, dy: 0, w: 64, h: 64, speed: 200, image: love.graphics.newImage("images/Laius.png"), lives: 30
 		player\moveTo(tile(39, 50), ->
 			player\speak("Oedipus", {"Get out of the way, old man."},  ->
 				laius\speak("Laius", {"Do you have any idea who you are talking to, boy?"}, ->
 					player\speak("Oedipus", {"If you don't get out of the way, I will remove you forcibly."}, ->
 						laius\speak("Laius", {"You can try. Guards, take him!"}, ->
 							export isDialogue = false
+							export laius = BossLaius(laius.p)
 						)
 					)
 				)
 			)
 		)
-		super!
-		export mommy = Mommy x:41*64, y: 13*64, dx:0, dy:0, speed: 100, lives: 20, image: love.graphics.newImage("images/Mommy.png")
-		--mommy\talk!
-		--player\moveTo(tile(43, 10))
 	death: =>
 		export score =  score - 10
 		export isDialogue = false
 		Timer.cancel(mommy.handle)
 		export enemies = {}
 		player.p.lives = 5
-		Mommy\speak("Mommy", {"You see! Another bumble falls. Aren't we such good parents, Daddy?"}, ()->
-			Mommy\speak("Game", {"Your score is now " .. score..". Hit enter to redo the fight!"}, ()->
+		laius\speak("Mommy", {"You see! Another bumble falls. Aren't we such good parents, Daddy?"}, ()->
+			laius\speak("Game", {"Your score is now " .. score..". Hit enter to redo the fight!"}, ()->
 				export STATE = AmericaFight!
 			)
 		)
 	update: (dt) =>
 		player\update(dt)
-		mommy\update(dt)
-		if collision(mommy.p, 64, 64, player.p, 64, 64) then self\death!
-		if mommy.p.lives < 1 
+		laius\update(dt)
+		if collision(laius.p, 64, 64, player.p, 64, 64) then self\death!
+		if laius.p.lives < 1 
 			export isDialogue = true
-			Mommy\speak("Mommy", {"Argh... you done killed me."}, ()->
+			laius\speak("Laius", {"Argh... you done killed me."}, ()->
 				export enemies = {}
-				Timer.cancel(mommy.handle)
+				Timer.cancel(laius.handle)
 				export STATE = CrossRoads!
 			)
 		if #enemies > 0

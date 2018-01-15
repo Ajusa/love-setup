@@ -184,6 +184,24 @@ do
   end
   Player = _class_0
 end
+shoot = function()
+  if sinceFire > .3 and not isDialogue then
+    local x, y = love.mouse.getPosition()
+    sinceFire = 0
+    local startX, startY = player.p.x + 32, player.p.y + 32
+    local mouseX, mouseY = camera:worldCoords(x, y)
+    local angle = math.atan2((mouseY - startY), (mouseX - startX))
+    local dx, dy = 350 * math.cos(angle), 350 * math.sin(angle)
+    return table.insert(bullets, Dagger({
+      x = startX,
+      y = startY,
+      dx = dx,
+      dy = dy,
+      angle = angle,
+      distance = 0
+    }))
+  end
+end
 love.load = function()
   player = Player({
     x = 43 * 64,
@@ -203,6 +221,9 @@ end
 love.update = function(dt)
   Moan.update(dt)
   Timer.update(dt)
+  if love.mouse.isDown(1) then
+    shoot()
+  end
   if not isDialogue then
     STATE:update(dt)
   end
@@ -226,23 +247,6 @@ love.draw = function()
   love.graphics.print("Lives: " .. player.p.lives, 12, 12)
   love.graphics.print("Score: " .. score, 130, 12)
   return Moan.draw()
-end
-love.mousepressed = function(x, y, button)
-  if button == 1 and sinceFire > .3 and not isDialogue then
-    sinceFire = 0
-    local startX, startY = player.p.x + 32, player.p.y + 32
-    local mouseX, mouseY = camera:worldCoords(x, y)
-    local angle = math.atan2((mouseY - startY), (mouseX - startX))
-    local dx, dy = 350 * math.cos(angle), 350 * math.sin(angle)
-    return table.insert(bullets, Dagger({
-      x = startX,
-      y = startY,
-      dx = dx,
-      dy = dy,
-      angle = angle,
-      distance = 0
-    }))
-  end
 end
 love.keyreleased = function(key)
   return Moan.keyreleased(key)

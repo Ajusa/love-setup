@@ -51,7 +51,15 @@ class Player extends Entity
 		for i=#enemies,1,-1 do if fullCollision(enemies[i].p.x + 8, enemies[i].p.y + 8, 48, 48, @p.x, @p.y, 64, 64) -- the 8's are for a smaller hitbox
 				@p.lives -= 1
 				table.remove(enemies, i)
-
+shoot = ->
+	if sinceFire > .3 and not isDialogue
+		x, y = love.mouse.getPosition()
+		sinceFire = 0
+		startX, startY = player.p.x + 32, player.p.y + 32
+		mouseX, mouseY = camera\worldCoords(x,y) --this stops the mouse coords from being off from the real coors, cause we have a camera
+		angle = math.atan2((mouseY - startY), (mouseX - startX))
+		dx, dy = 350 * math.cos(angle), 350 * math.sin(angle)
+		table.insert(bullets, Dagger x: startX, y: startY, :dx, :dy, :angle, distance: 0)
 --Actual Game--
 love.load = ->	
 	export player = Player x: 43*64, y: 6*64, w: 64, h: 64, speed: 200, lives: 5, image: love.graphics.newImage("images/Amir.png")
@@ -63,6 +71,7 @@ love.load = ->
 love.update = (dt) ->
 	Moan.update(dt)
 	Timer.update(dt)
+	if love.mouse.isDown(1) then shoot!
 	if not isDialogue then STATE\update(dt)
 	if player.p.lives > 0
 		-- Update world
@@ -87,12 +96,5 @@ love.draw = ->
 	--	love.graphics.print("GAME OVER!", love.graphics.getWidth!/4, love.graphics.getHeight!/2)
 	--	love.graphics.print("Score: ".. score, love.graphics.getWidth!/4, love.graphics.getHeight!/1.5)
 	--	love.graphics.print("Hit enter to play again ", love.graphics.getWidth!/4, love.graphics.getHeight!/1.2)
-love.mousepressed = (x, y, button) ->
-	if button == 1 and sinceFire > .3 and not isDialogue
-		sinceFire = 0
-		startX, startY = player.p.x + 32, player.p.y + 32
-		mouseX, mouseY = camera\worldCoords(x,y) --this stops the mouse coords from being off from the real coors, cause we have a camera
-		angle = math.atan2((mouseY - startY), (mouseX - startX))
-		dx, dy = 350 * math.cos(angle), 350 * math.sin(angle)
-		table.insert(bullets, Dagger x: startX, y: startY, :dx, :dy, :angle, distance: 0)
+
 love.keyreleased = (key) -> Moan.keyreleased(key)

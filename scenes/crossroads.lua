@@ -273,6 +273,70 @@ do
 end
 do
   local _class_0
+  local _parent_0 = Entity
+  local _base_0 = {
+    update = function(self, dt)
+      _class_0.__parent.__base.update(self, dt)
+      _class_0.__parent.follow(self, player)
+      for i = #bullets, 1, -1 do
+        if collision(bullets[i].p, 20, 40, self.p, 64, 64) then
+          self.p.lives = self.p.lives - 1
+          table.remove(bullets, i)
+        end
+      end
+      if #enemies < 3 then
+        for i = 1, 10 do
+          table.insert(enemies, Enemy({
+            x = random(64 * (2), (32) * 64),
+            y = random(64 * (2), (map.height - 2) * 64),
+            lives = 2,
+            speed = 60,
+            image = love.graphics.newImage("images/Knuckles.png")
+          }))
+        end
+      end
+    end,
+    draw = function(self)
+      _class_0.__parent.__base.draw(self)
+      love.graphics.setFont(kenPixel)
+      return love.graphics.print("Lives: " .. self.p.lives, self.p.x, self.p.y - 30)
+    end
+  }
+  _base_0.__index = _base_0
+  setmetatable(_base_0, _parent_0.__base)
+  _class_0 = setmetatable({
+    __init = function(self, p)
+      return _class_0.__parent.__init(self, p)
+    end,
+    __base = _base_0,
+    __name = "BossLaius",
+    __parent = _parent_0
+  }, {
+    __index = function(cls, name)
+      local val = rawget(_base_0, name)
+      if val == nil then
+        local parent = rawget(cls, "__parent")
+        if parent then
+          return parent[name]
+        end
+      else
+        return val
+      end
+    end,
+    __call = function(cls, ...)
+      local _self_0 = setmetatable({}, _base_0)
+      cls.__init(_self_0, ...)
+      return _self_0
+    end
+  })
+  _base_0.__class = _class_0
+  if _parent_0.__inherited then
+    _parent_0.__inherited(_parent_0, _class_0)
+  end
+  BossLaius = _class_0
+end
+do
+  local _class_0
   local _parent_0 = BaseState
   local _base_0 = {
     death = function(self)
@@ -281,10 +345,10 @@ do
       Timer.cancel(mommy.handle)
       enemies = { }
       player.p.lives = 5
-      return Mommy:speak("Mommy", {
+      return laius:speak("Mommy", {
         "You see! Another bumble falls. Aren't we such good parents, Daddy?"
       }, function()
-        return Mommy:speak("Game", {
+        return laius:speak("Game", {
           "Your score is now " .. score .. ". Hit enter to redo the fight!"
         }, function()
           STATE = AmericaFight()
@@ -293,17 +357,17 @@ do
     end,
     update = function(self, dt)
       player:update(dt)
-      mommy:update(dt)
-      if collision(mommy.p, 64, 64, player.p, 64, 64) then
+      laius:update(dt)
+      if collision(laius.p, 64, 64, player.p, 64, 64) then
         self:death()
       end
-      if mommy.p.lives < 1 then
+      if laius.p.lives < 1 then
         isDialogue = true
-        Mommy:speak("Mommy", {
+        laius:speak("Laius", {
           "Argh... you done killed me."
         }, function()
           enemies = { }
-          Timer.cancel(mommy.handle)
+          Timer.cancel(laius.handle)
           STATE = CrossRoads()
         end)
       end
@@ -333,15 +397,19 @@ do
       player.p.x, player.p.y, player.p.lives, player.p.image = 56 * 64, 49 * 64, 5, love.graphics.newImage("images/Oedipus.png")
       player.p.g = anim8.newGrid(16, 16, player.p.image:getWidth(), player.p.image:getHeight())
       player.p.anim = anim8.newAnimation(player.p.g('1-3', 1, '1-3', 2, '1-2', 2), 0.1)
+      _class_0.__parent.__init(self)
       laius = Entity({
         x = 36 * 64,
         y = 52 * 64,
+        dx = 0,
+        dy = 0,
         w = 64,
         h = 64,
         speed = 200,
-        image = love.graphics.newImage("images/Laius.png")
+        image = love.graphics.newImage("images/Laius.png"),
+        lives = 30
       })
-      player:moveTo(tile(39, 50), function()
+      return player:moveTo(tile(39, 50), function()
         return player:speak("Oedipus", {
           "Get out of the way, old man."
         }, function()
@@ -355,21 +423,12 @@ do
                 "You can try. Guards, take him!"
               }, function()
                 isDialogue = false
+                laius = BossLaius(laius.p)
               end)
             end)
           end)
         end)
       end)
-      _class_0.__parent.__init(self)
-      mommy = Mommy({
-        x = 41 * 64,
-        y = 13 * 64,
-        dx = 0,
-        dy = 0,
-        speed = 100,
-        lives = 20,
-        image = love.graphics.newImage("images/Mommy.png")
-      })
     end,
     __base = _base_0,
     __name = "CrossRoadsFight",
