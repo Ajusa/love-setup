@@ -43,7 +43,10 @@ class BossMommy extends Entity
 		@p.g = anim8.newGrid(32, 32, @p.image\getWidth!, @p.image\getHeight!)
 		@p.anim = anim8.newAnimation(@p.g('1-2',1, '1-2',2), 0.1)
 		self\addMinions!
-		@handle = Timer.every(10, () -> self\addMinions!)
+		@handle = Timer.every(10, () -> 
+			self\addMinions!
+			@p.lives += 3
+		)
 	update: (dt) =>
 		super dt
 		super\follow(player)
@@ -52,7 +55,7 @@ class BossMommy extends Entity
 				table.remove(bullets, i)
 	addMinions: =>
 		if #enemies < 100
-			for i = 1, 10 do table.insert(enemies, Enemy x: random(64*(2), (32)*64), y: random(64*(2), (map.height-2)*64), lives: 2, speed: 70, image: love.graphics.newImage("images/Daddy.png"))
+			for i = 1, 10 do table.insert(enemies, Enemy x: random(@p.x + (64*(5)), @p.x - (5)*64), y: random(@p.y + (64*(5)), @p.y - (5)*64), lives: 2, speed: 100, image: love.graphics.newImage("images/Daddy.png"))
 	draw: =>
 		super!
 		love.graphics.setFont(kenPixel)
@@ -61,11 +64,11 @@ class BossMommy extends Entity
 class AmericaFight extends BaseState
 	new: =>
 		export world = bump.newWorld!
-		export map = sti("data/testmap.lua", {"bump"})
-		player.p.x, player.p.y, player.p.lives = 38*64, 13*64, 5
+		export map = sti("data/American Dream Apartment.lua", {"bump"})
+		player.p.x, player.p.y, player.p.lives = 24*64, 48*64, 5
 		super!
-		export mommy = Mommy x:41*64, y: 13*64, dx:0, dy:0, speed: 100, lives: 30, image: love.graphics.newImage("images/Mommy.png")
-		mommy\talk!
+		export mommy = Mommy x:24*64, y: 18*64, dx:0, dy:0, speed: 100, lives: 30, image: love.graphics.newImage("images/Mommy.png")
+		player\moveTo(tile(24, 22), -> mommy\talk!)
 		--player\moveTo(tile(43, 10))
 	death: =>
 		export score =  score - 10

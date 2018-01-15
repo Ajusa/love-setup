@@ -137,10 +137,10 @@ do
       if #enemies < 100 then
         for i = 1, 10 do
           table.insert(enemies, Enemy({
-            x = random(64 * (2), (32) * 64),
-            y = random(64 * (2), (map.height - 2) * 64),
+            x = random(self.p.x + (64 * (5)), self.p.x - (5) * 64),
+            y = random(self.p.y + (64 * (5)), self.p.y - (5) * 64),
             lives = 2,
-            speed = 70,
+            speed = 100,
             image = love.graphics.newImage("images/Daddy.png")
           }))
         end
@@ -162,7 +162,8 @@ do
       self.p.anim = anim8.newAnimation(self.p.g('1-2', 1, '1-2', 2), 0.1)
       self:addMinions()
       self.handle = Timer.every(10, function()
-        return self:addMinions()
+        self:addMinions()
+        self.p.lives = self.p.lives + 3
       end)
     end,
     __base = _base_0,
@@ -247,21 +248,23 @@ do
   _class_0 = setmetatable({
     __init = function(self)
       world = bump.newWorld()
-      map = sti("data/testmap.lua", {
+      map = sti("data/American Dream Apartment.lua", {
         "bump"
       })
-      player.p.x, player.p.y, player.p.lives = 38 * 64, 13 * 64, 5
+      player.p.x, player.p.y, player.p.lives = 24 * 64, 48 * 64, 5
       _class_0.__parent.__init(self)
       mommy = Mommy({
-        x = 41 * 64,
-        y = 13 * 64,
+        x = 24 * 64,
+        y = 18 * 64,
         dx = 0,
         dy = 0,
         speed = 100,
         lives = 30,
         image = love.graphics.newImage("images/Mommy.png")
       })
-      return mommy:talk()
+      return player:moveTo(tile(24, 22), function()
+        return mommy:talk()
+      end)
     end,
     __base = _base_0,
     __name = "AmericaFight",
