@@ -4,14 +4,14 @@ do
   local _base_0 = {
     update = function(self, dt)
       player:update(dt)
-      if collision(player.p, 64, 64, tile(9, 23), 64, 128) then
+      if collision(player.p, 64, 64, tile(15, 11), 128, 128) then
         isDialogue = true
         return self.barker:speak("Mrs. Barker", {
           "Are you sure you want to do this dear?",
           "I understand what happened now, so I don't blame you for wanting to, but this decision is permanent.",
           "Yes? Good luck then,"
         }, function()
-          return player:moveTo(tile(9, 24), function()
+          return player:moveTo(tile(15, 10), function()
             STATE = AmericaFight()
           end)
         end)
@@ -27,14 +27,14 @@ do
   _class_0 = setmetatable({
     __init = function(self)
       world = bump.newWorld()
-      map = sti("data/castle.lua", {
+      map = sti("data/The Streets of America.lua", {
         "bump"
       })
-      player.p.x, player.p.y, player.p.lives = 9 * 64, 6 * 64, 5
+      player.p.x, player.p.y, player.p.lives = 25 * 64, 48 * 64, 5
       _class_0.__parent.__init(self)
       self.barker = Entity({
-        x = 8 * 64,
-        y = 23 * 64,
+        x = 17 * 64,
+        y = 12 * 64,
         w = 64,
         h = 64,
         speed = 200,

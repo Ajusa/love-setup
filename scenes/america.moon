@@ -2,19 +2,19 @@ export *
 class America extends BaseState
 	new: =>
 		export world = bump.newWorld!
-		export map = sti("data/castle.lua", {"bump"})
-		player.p.x, player.p.y, player.p.lives = 9*64, 6*64, 5
+		export map = sti("data/The Streets of America.lua", {"bump"})
+		player.p.x, player.p.y, player.p.lives = 25*64, 48*64, 5
 		super!
-		@barker = Entity x: 8*64, y: 23*64, w: 64, h: 64, speed: 200, image: love.graphics.newImage("images/Mrs. Barker.png")
+		@barker = Entity x: 17*64, y: 12*64, w: 64, h: 64, speed: 200, image: love.graphics.newImage("images/Mrs. Barker.png")
 		--player\moveTo(tile(43, 10))
 	update: (dt) =>
 		player\update(dt)
-		if collision(player.p, 64, 64, tile(9, 23), 64, 128)
+		if collision(player.p, 64, 64, tile(15, 11), 128, 128)
 			export isDialogue = true
 			@barker\speak("Mrs. Barker", {"Are you sure you want to do this dear?", 
 				"I understand what happened now, so I don't blame you for wanting to, but this decision is permanent.", 
 				"Yes? Good luck then,"}, ->
-				player\moveTo(tile(9, 24), ()->export STATE = AmericaFight!)
+				player\moveTo(tile(15, 10), ()->export STATE = AmericaFight!)
 				
 			)
 		--if love.keyboard.isDown("return") then export STATE = KiteFight!
