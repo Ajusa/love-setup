@@ -72,7 +72,7 @@ love.load = ->
 	export bullets = {}
 	export dagger = love.graphics.newImage("images/dagger.png")
 	export cameraX,cameraY = camera\cameraCoords(player.p.x, player.p.y)
-	export STATE = Kabul!
+	export STATE = CrossRoads!
 love.update = (dt) ->
 	Moan.update(dt)
 	Timer.update(dt)

@@ -232,7 +232,7 @@ love.load = function()
   bullets = { }
   dagger = love.graphics.newImage("images/dagger.png")
   cameraX, cameraY = camera:cameraCoords(player.p.x, player.p.y)
-  STATE = Kabul()
+  STATE = CrossRoads()
 end
 love.update = function(dt)
   Moan.update(dt)
