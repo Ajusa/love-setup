@@ -4,18 +4,18 @@ class KiteFight extends BaseState
 		export world = bump.newWorld!
 		export map = sti("data/dark.lua", {"bump"})
 		export isDialogue = true
-		player.p.x, player.p.y, player.p.lives, score = 43*64, 6*64, 5, 0
+		player.p.x, player.p.y, player.p.lives, score = 37*64, 22*64, 5, 0
 		super!
-		export assef =  Assef x:43*64, y: 13*64, speed: 175, image: love.graphics.newImage("images/Assef.png")
+		export assef =  Assef x:32*64, y: 13*64, speed: 175, image: love.graphics.newImage("images/Assef.png")
 		@died = false
 		@cutScene = love.graphics.newVideo("cutscenes/Assef-Death.ogv")
 		Moan.speak("Amir", {"I decided to walk in to the building, hoping to find Sohrab"}, 
 		{oncomplete: -> 
 			export world = bump.newWorld!
-			export map = sti("data/testmap.lua", {"bump"})
+			export map = sti("data/Assef's House.lua", {"bump"})
 			super!
-			player\moveTo(tile(43, 10))
-			assef\moveTo(tile(47, 10), assef\talk)
+			player\moveTo(tile(37, 19))
+			assef\moveTo(tile(37, 15), assef\talk)
 		})
 	death: =>
 		@died = true
@@ -51,8 +51,8 @@ class Assef extends Entity
 			{oncomplete: ()-> 
 				export isDialogue = false
 				export assef = BossAssef(@p)
-				for i = 1, 10 do table.insert(enemies,Enemy x: random(64*(2), (32)*64), y: random(64*(2), (map.height-2)*64), lives: 2, speed: 30, image: love.graphics.newImage("images/Taliban Member 1.png"))
-				for i = 1, 10 do table.insert(enemies,Enemy x: random(64*(2), (32)*64), y: random(64*(2), (map.height-2)*64), lives: 2, speed: 30, image: love.graphics.newImage("images/Taliban Member.png"))
+				for i = 1, 10 do table.insert(enemies,Enemy x: random(64*(2), (52)*64), y: random(64*(2), (30)*64), lives: 2, speed: 30, image: love.graphics.newImage("images/Taliban Member 1.png"))
+				for i = 1, 10 do table.insert(enemies,Enemy x: random(64*(2), (52)*64), y: random(64*(2), (30)*64), lives: 2, speed: 30, image: love.graphics.newImage("images/Taliban Member.png"))
 			})
 
 class BossAssef extends Entity

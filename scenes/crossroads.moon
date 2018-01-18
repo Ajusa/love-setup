@@ -158,7 +158,7 @@ class CrossRoadsFight extends BaseState
 				@recentScramble = false
 				laius.direction = 1
 			)
-			player\scramble(4)
+			player\scramble(5)
 		if laius.p.lives < 1 
 			export isDialogue = true
 			laius\speak("Laius", {"Argh... may the gods curse you!"}, ()->
@@ -166,7 +166,7 @@ class CrossRoadsFight extends BaseState
 				@died = true
 				@cutScene\play!
 				Timer.clear!
-				
+				player.order = clone(player.base)
 			)
 		if #enemies > 0
 			for i=#enemies,1,-1 do enemies[i]\update(dt,i)

@@ -45,10 +45,10 @@ do
       })
       isDialogue = true
       local score
-      player.p.x, player.p.y, player.p.lives, score = 43 * 64, 6 * 64, 5, 0
+      player.p.x, player.p.y, player.p.lives, score = 37 * 64, 22 * 64, 5, 0
       _class_0.__parent.__init(self)
       assef = Assef({
-        x = 43 * 64,
+        x = 32 * 64,
         y = 13 * 64,
         speed = 175,
         image = love.graphics.newImage("images/Assef.png")
@@ -60,12 +60,12 @@ do
       }, {
         oncomplete = function()
           world = bump.newWorld()
-          map = sti("data/testmap.lua", {
+          map = sti("data/Assef's House.lua", {
             "bump"
           })
           _class_0.__parent.__init(self)
-          player:moveTo(tile(43, 10))
-          return assef:moveTo(tile(47, 10), (function()
+          player:moveTo(tile(37, 19))
+          return assef:moveTo(tile(37, 15), (function()
             local _base_1 = assef
             local _fn_0 = _base_1.talk
             return function(...)
@@ -118,8 +118,8 @@ do
           assef = BossAssef(self.p)
           for i = 1, 10 do
             table.insert(enemies, Enemy({
-              x = random(64 * (2), (32) * 64),
-              y = random(64 * (2), (map.height - 2) * 64),
+              x = random(64 * (2), (52) * 64),
+              y = random(64 * (2), (30) * 64),
               lives = 2,
               speed = 30,
               image = love.graphics.newImage("images/Taliban Member 1.png")
@@ -127,8 +127,8 @@ do
           end
           for i = 1, 10 do
             table.insert(enemies, Enemy({
-              x = random(64 * (2), (32) * 64),
-              y = random(64 * (2), (map.height - 2) * 64),
+              x = random(64 * (2), (52) * 64),
+              y = random(64 * (2), (30) * 64),
               lives = 2,
               speed = 30,
               image = love.graphics.newImage("images/Taliban Member.png")

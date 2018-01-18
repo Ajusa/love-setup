@@ -375,7 +375,7 @@ do
           self.recentScramble = false
           laius.direction = 1
         end)
-        player:scramble(4)
+        player:scramble(5)
       end
       if laius.p.lives < 1 then
         isDialogue = true
@@ -385,7 +385,8 @@ do
           enemies = { }
           self.died = true
           self.cutScene:play()
-          return Timer.clear()
+          Timer.clear()
+          player.order = clone(player.base)
         end)
       end
       if #enemies > 0 then
