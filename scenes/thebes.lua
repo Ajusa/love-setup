@@ -3,6 +3,107 @@ do
   local _parent_0 = BaseState
   local _base_0 = {
     update = function(self, dt)
+      if player.p.lives < 1 then
+        isDialogue = true
+        self.died = true
+        self.cutScene:play()
+        self.i = 0
+      end
+      player:update(dt)
+      if collision(player.p, 64, 64, tile(22, 3), 64 * 4, 64) then
+        STATE = Palace()
+      end
+    end,
+    draw = function(self)
+      if self.died then
+        local cX, cY = camera:worldCoords(love.graphics.getWidth() / 2, 0)
+        love.graphics.draw(self.cutScene, cX, cY, 0, love.graphics.getHeight() / self.cutScene:getHeight(), love.graphics.getHeight() / self.cutScene:getHeight(), self.cutScene:getWidth() / 2)
+        if not self.cutScene:isPlaying() then
+          if self.i == 1 then
+            self.cutScene = self.cutScene2
+            return self.cutScene:play()
+          else
+            self.i = 1
+            return love.audio.stop()
+          end
+        end
+      else
+        return _class_0.__parent.__base.draw(self)
+      end
+    end
+  }
+  _base_0.__index = _base_0
+  setmetatable(_base_0, _parent_0.__base)
+  _class_0 = setmetatable({
+    __init = function(self)
+      world = bump.newWorld()
+      map = sti("data/dark.lua", {
+        "bump"
+      })
+      player.p.x, player.p.y, player.p.lives = 23 * 64, 48 * 64, 5
+      self.music = "sound/oedipus.mp3"
+      self.cutScene = love.graphics.newVideo("cutscenes/The-Blinding-of-Oedipus.ogv")
+      self.cutScene2 = love.graphics.newVideo("cutscenes/credits.ogv")
+      _class_0.__parent.__init(self)
+      isDialogue = true
+      player:speak("Oedipus", {
+        "Oh god, what have I done?"
+      }, function()
+        isDialogue = false
+      end)
+      dagger = love.graphics.newImage("images/Brooch.png")
+      shoot = function()
+        if sinceFire > .5 and not isDialogue then
+          local x, y = love.mouse.getPosition()
+          sinceFire = 0
+          local startX, startY = player.p.x + 32, player.p.y + 32
+          local mouseX, mouseY = camera:worldCoords(x, y)
+          local angle = math.atan2((mouseY - startY), (mouseX - startX))
+          local dx, dy = 350 * math.cos(angle), 350 * math.sin(angle)
+          player.p.lives = player.p.lives - 1
+          return table.insert(bullets, Dagger({
+            x = startX,
+            y = startY,
+            dx = dx,
+            dy = dy,
+            angle = angle,
+            distance = 475
+          }))
+        end
+      end
+    end,
+    __base = _base_0,
+    __name = "DarkEyes",
+    __parent = _parent_0
+  }, {
+    __index = function(cls, name)
+      local val = rawget(_base_0, name)
+      if val == nil then
+        local parent = rawget(cls, "__parent")
+        if parent then
+          return parent[name]
+        end
+      else
+        return val
+      end
+    end,
+    __call = function(cls, ...)
+      local _self_0 = setmetatable({}, _base_0)
+      cls.__init(_self_0, ...)
+      return _self_0
+    end
+  })
+  _base_0.__class = _class_0
+  if _parent_0.__inherited then
+    _parent_0.__inherited(_parent_0, _class_0)
+  end
+  DarkEyes = _class_0
+end
+do
+  local _class_0
+  local _parent_0 = BaseState
+  local _base_0 = {
+    update = function(self, dt)
       player:update(dt)
       if collision(player.p, 64, 64, tile(22, 3), 64 * 4, 64) then
         STATE = Palace()
@@ -107,7 +208,7 @@ do
         local cX, cY = camera:worldCoords(love.graphics.getWidth() / 2, 0)
         love.graphics.draw(self.cutScene, cX, cY, 0, love.graphics.getHeight() / self.cutScene:getHeight(), love.graphics.getHeight() / self.cutScene:getHeight(), self.cutScene:getWidth() / 2)
         if not self.cutScene:isPlaying() then
-          STATE = CrossRoads()
+          STATE = DarkEyes()
         end
       else
         _class_0.__parent.__base.draw(self)
@@ -190,7 +291,7 @@ do
     end,
     update = function(self, dt, i)
       self.p.distance = self.p.distance + (((self.p.dx ^ 2) + (self.p.dy ^ 2)) ^ (1 / 2) * dt)
-      if self.p.distance > 600 then
+      if self.p.distance > 650 then
         do
           table.remove(brooches, i)
         end
@@ -247,14 +348,16 @@ do
       return _class_0.__parent.__base.update(self, dt)
     end,
     addMinions = function(self)
-      for i = 1, 20 do
-        table.insert(enemies, Enemy({
-          x = random(self.p.x + (64 * (5)), self.p.x - (5) * 64),
-          y = random(self.p.y + (64 * (5)), self.p.y - (5) * 64),
-          lives = 2,
-          speed = 100,
-          image = love.graphics.newImage("images/Laius servant.png")
-        }))
+      if #enemies < 50 then
+        for i = 1, 3 do
+          table.insert(enemies, Enemy({
+            x = random(self.p.x + (64 * (2)), self.p.x - (2) * 64),
+            y = random(self.p.y + (64 * (2)), self.p.y - (2) * 64),
+            lives = 2,
+            speed = self.p.speed - 20,
+            image = love.graphics.newImage("images/Laius servant.png")
+          }))
+        end
       end
     end,
     draw = function(self)
@@ -271,7 +374,7 @@ do
       self.p.anim = anim8.newAnimation(self.p.g('1-2', 1, '1-2', 2), 0.1)
       Timer.every(.7, function()
         local angle = math.atan2((player.p.y - self.p.y), (player.p.x - self.p.x))
-        local dx, dy = 400 * math.cos(angle), 400 * math.sin(angle)
+        local dx, dy = 450 * math.cos(angle), 450 * math.sin(angle)
         return table.insert(brooches, JDagger({
           x = self.p.x,
           y = self.p.y,
@@ -281,7 +384,11 @@ do
           distance = 0
         }))
       end)
-      return self:addMinions()
+      self:addMinions()
+      self.handle = Timer.every(5, function()
+        self:addMinions()
+        self.p.lives = self.p.lives + 1
+      end)
     end,
     __base = _base_0,
     __name = "Jocasta",
