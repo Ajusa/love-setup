@@ -13,7 +13,7 @@ isDialogue = false
 --Classes--
 class Dagger extends Entity
 	new: (p) =>
-  		@p = p
+		@p = p
 	draw: => love.graphics.draw(dagger, @p.x, @p.y, @p.angle)
 	update: (dt, i) => 
 		@p.distance += ((@p.dx^2) + (@p.dy^2))^(1/2)*dt
@@ -72,7 +72,7 @@ love.load = ->
 	export bullets = {}
 	export dagger = love.graphics.newImage("images/dagger.png")
 	export cameraX,cameraY = camera\cameraCoords(player.p.x, player.p.y)
-	export STATE = CrossRoads!
+	export STATE = Palace!
 love.update = (dt) ->
 	Moan.update(dt)
 	Timer.update(dt)

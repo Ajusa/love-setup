@@ -290,7 +290,7 @@ do
             x = random(64 * (25), (55) * 64),
             y = random(64 * (30), (60) * 64),
             lives = 3,
-            speed = 80,
+            speed = 120,
             image = love.graphics.newImage("images/Knuckles.png")
           })
           enem.p.anim = anim8.newAnimation(enem.p.g(1, 1, 1, 2), 0.2)

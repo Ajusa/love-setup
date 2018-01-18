@@ -104,7 +104,7 @@ class BossLaius extends Entity
 				table.remove(bullets, i)
 		if #enemies < 3
 			for i = 1, 10 do
-				enem = Enemy x: random(64*(25), (55)*64), y: random(64*(30), (60)*64), lives: 3, speed: 80, image: love.graphics.newImage("images/Knuckles.png")
+				enem = Enemy x: random(64*(25), (55)*64), y: random(64*(30), (60)*64), lives: 3, speed: 120, image: love.graphics.newImage("images/Knuckles.png")
 				enem.p.anim = anim8.newAnimation(enem.p.g(1,1, 1,2), 0.2)
 				table.insert(enemies, enem)
 	draw: =>
