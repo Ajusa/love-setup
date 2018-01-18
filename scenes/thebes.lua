@@ -21,6 +21,7 @@ do
         "bump"
       })
       player.p.x, player.p.y, player.p.lives = 23 * 64, 48 * 64, 5
+      self.music = "sound/thebes.mp3"
       _class_0.__parent.__init(self)
       isDialogue = true
       return player:speak("Oedipus", {
@@ -68,6 +69,8 @@ do
           player.p.lives = player.p.lives - 1
           table.remove(brooches, i)
         end
+      end
+      for i = #brooches, 1, -1 do
         brooches[i]:update(dt, i)
       end
       if #enemies > 0 then
@@ -127,6 +130,7 @@ do
         "bump"
       })
       player.p.x, player.p.y, player.p.lives = 24 * 64, 46 * 64, 5
+      self.music = "sound/jocasta.mp3"
       _class_0.__parent.__init(self)
       isDialogue = true
       self.jocasta = Jocasta({
@@ -139,11 +143,12 @@ do
       player:speak("Oedipus", {
         "Where is the wife, no wife, the teeming womb -- That bore a double harvest, me and mine?"
       }, function()
-        self.jocasta:speak("Jocasta", {
+        return self.jocasta:speak("Jocasta", {
           "Right here, wicked Oedipus. Why did you have to find the truth?",
           "The only way to make things right is to kill you. Guards, take him!"
-        })
-        isDialogue = false
+        }, function()
+          isDialogue = false
+        end)
       end)
       self.cutScene = love.graphics.newVideo("cutscenes/Jocasta.ogv")
     end,
@@ -185,7 +190,7 @@ do
     end,
     update = function(self, dt, i)
       self.p.distance = self.p.distance + (((self.p.dx ^ 2) + (self.p.dy ^ 2)) ^ (1 / 2) * dt)
-      if self.p.distance > 500 then
+      if self.p.distance > 600 then
         do
           table.remove(brooches, i)
         end

@@ -63,6 +63,7 @@ do
           map = sti("data/Assef's House.lua", {
             "bump"
           })
+          self.music = "sound/assef.mp3"
           _class_0.__parent.__init(self)
           player:moveTo(tile(37, 19))
           return assef:moveTo(tile(37, 15), (function()

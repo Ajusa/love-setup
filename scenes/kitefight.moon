@@ -13,6 +13,7 @@ class KiteFight extends BaseState
 		{oncomplete: -> 
 			export world = bump.newWorld!
 			export map = sti("data/Assef's House.lua", {"bump"})
+			@music = "sound/assef.mp3"
 			super!
 			player\moveTo(tile(37, 19))
 			assef\moveTo(tile(37, 15), assef\talk)

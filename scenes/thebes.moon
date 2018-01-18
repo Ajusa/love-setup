@@ -4,6 +4,7 @@ class Thebes extends BaseState
 		export world = bump.newWorld!
 		export map = sti("data/Thebes.lua", {"bump"})
 		player.p.x, player.p.y, player.p.lives = 23*64, 48*64, 5
+		@music = "sound/thebes.mp3"
 		super!
 		export isDialogue = true
 		player\speak("Oedipus", {"I wonder if the servant has arrived. Maybe he is talking to Jocasta in the palace, right now?"}, -> export isDialogue = false)
@@ -17,13 +18,13 @@ class Palace extends BaseState
 		export world = bump.newWorld!
 		export map = sti("data/Oedipus's Palace.lua", {"bump"})
 		player.p.x, player.p.y, player.p.lives = 24*64, 46*64, 5
+		@music = "sound/jocasta.mp3"
 		super!
 		export isDialogue = true
 		@jocasta = Jocasta x:24*64, y: 25*64, speed: 130, image: love.graphics.newImage("images/Jocasta.png"), lives: 30
 		player\speak("Oedipus", {"Where is the wife, no wife, the teeming womb -- That bore a double harvest, me and mine?"}, -> 
 			@jocasta\speak("Jocasta", {"Right here, wicked Oedipus. Why did you have to find the truth?", 
-			"The only way to make things right is to kill you. Guards, take him!"})
-			export isDialogue = false
+			"The only way to make things right is to kill you. Guards, take him!"}, -> export isDialogue = false)
 		)
 		@cutScene = love.graphics.newVideo("cutscenes/Jocasta.ogv")
 	update: (dt) =>
@@ -33,7 +34,7 @@ class Palace extends BaseState
 			if collision(brooches[i].p, 20, 40, player.p, 64, 64) then
 				player.p.lives -= 1
 				table.remove(brooches, i)
-			brooches[i]\update(dt,i)
+		for i=#brooches,1,-1 do	brooches[i]\update(dt,i)
 		if #enemies > 0
 			for i=#enemies,1,-1 do enemies[i]\update(dt,i)
 		if @jocasta.p.lives < 1 
@@ -73,7 +74,7 @@ class JDagger extends Entity
 	draw: => love.graphics.draw(brooch, @p.x, @p.y, @p.angle)
 	update: (dt, i) => 
 		@p.distance += ((@p.dx^2) + (@p.dy^2))^(1/2)*dt
-		if @p.distance > 500 do table.remove(brooches, i)
+		if @p.distance > 600 do table.remove(brooches, i)
 		super dt
 class Jocasta extends Entity
 	new: (p) =>

@@ -32,6 +32,7 @@ do
         "bump"
       })
       player.p.x, player.p.y, player.p.lives = 14 * 64, 2 * 64, 5
+      self.music = "sound/darkroom.mp3"
       _class_0.__parent.__init(self)
       self.tree = Entity({
         x = 21 * 64,
@@ -97,6 +98,7 @@ do
         "bump"
       })
       player.p.x, player.p.y, player.p.lives = 48 * 64, 34 * 64, 5
+      self.music = "sound/kabul.mp3"
       return _class_0.__parent.__init(self)
     end,
     __base = _base_0,

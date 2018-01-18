@@ -61,6 +61,12 @@ class BaseState
 	new: =>
 		map\bump_init(world)
 		world\add(player, player.p.x + 4, player.p.y + 4, 48, 48)
+		love.audio.stop!
+		if @music != nil then
+			music = love.audio.newSource(@music)
+			music\setVolume(0.4)
+			music\setLooping(true)
+			music\play!
 	draw: =>
 		map\draw()
 		for i,v in ipairs(bullets) do v\draw!

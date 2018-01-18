@@ -20,6 +20,7 @@ do
         "bump"
       })
       isDialogue = true
+      self.music = "sound/crossroads.mp3"
       _class_0.__parent.__init(self)
       player.p.x, player.p.y, player.p.lives, player.p.anim = 42 * 64, 46 * 64, 5, anim8.newAnimation(player.p.g('1-2', 1, '1-2', 2), 0.1)
       self.oedipus = Entity({
@@ -115,6 +116,7 @@ do
         "bump"
       })
       isDialogue = true
+      self.music = "sound/crossroads.mp3"
       _class_0.__parent.__init(self)
       player.p.x, player.p.y, player.p.lives, player.p.image, player.p.anim = 45 * 64, 47 * 64, 5, love.graphics.newImage("images/Young Man.png"), anim8.newAnimation(player.p.g('1-2', 1, '1-2', 2), 0.1)
       self.oedipus = Entity({
@@ -197,6 +199,7 @@ do
         "bump"
       })
       isDialogue = true
+      self.music = "sound/crossroads.mp3"
       _class_0.__parent.__init(self)
       player.p.x, player.p.y, player.p.lives, player.p.image = 40 * 64, 46 * 64, 5, love.graphics.newImage("images/Blind Oedipus.png")
       player.p.g = anim8.newGrid(16, 16, player.p.image:getWidth(), player.p.image:getHeight())
@@ -387,6 +390,7 @@ do
           self.cutScene:play()
           Timer.clear()
           player.order = clone(player.base)
+          self.i = 0
         end)
       end
       if #enemies > 0 then
@@ -400,7 +404,12 @@ do
         local cX, cY = camera:worldCoords(love.graphics.getWidth() / 2, 0)
         love.graphics.draw(self.cutScene, cX, cY, 0, love.graphics.getHeight() / self.cutScene:getHeight(), love.graphics.getHeight() / self.cutScene:getHeight(), self.cutScene:getWidth() / 2)
         if not self.cutScene:isPlaying() then
-          STATE = Thebes()
+          if self.i == 1 then
+            STATE = Thebes()
+          end
+          self.i = self.i + 1
+          self.cutScene = self.cutScene2
+          return self.cutScene:play()
         end
       else
         _class_0.__parent.__base.draw(self)
@@ -422,11 +431,13 @@ do
       })
       self.recentScramble = false
       self.died = false
-      self.cutScene = love.graphics.newVideo("cutscenes/Jocasta.ogv")
+      self.cutScene = love.graphics.newVideo("cutscenes/Oedipus-Sphinx.ogv")
+      self.cutScene2 = love.graphics.newVideo("cutscenes/Crowning.ogv")
       player.p.x, player.p.y, player.p.lives, player.p.image = 56 * 64, 49 * 64, 5, love.graphics.newImage("images/Oedipus.png")
       player.p.g = anim8.newGrid(16, 16, player.p.image:getWidth(), player.p.image:getHeight())
       player.p.anim = anim8.newAnimation(player.p.g('1-3', 1, '1-3', 2, '1-2', 2), 0.1)
       player:scramble(.01)
+      self.music = "sound/laius.mp3"
       _class_0.__parent.__init(self)
       laius = Entity({
         x = 36 * 64,

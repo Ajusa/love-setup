@@ -4,6 +4,7 @@ class BabaScene extends BaseState
 		export world = bump.newWorld!
 		export map = sti("data/Baba's House.lua", {"bump"})
 		player.p.x, player.p.y, player.p.lives = 30*64, 12*64, 5
+		@music = "sound/kabul.mp3"
 		super!
 		@baba = Entity x: 16*64, y: 7*64, w: 64, h: 64, speed: 200, image: love.graphics.newImage("images/Baba.png")
 		export isDialogue = true

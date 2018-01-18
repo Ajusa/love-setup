@@ -4,6 +4,7 @@ class DarkRoom extends BaseState
 		export world = bump.newWorld!
 		export map = sti("data/Dark Room.lua", {"bump"})
 		player.p.x, player.p.y, player.p.lives = 14*64, 2*64, 5
+		@music = "sound/darkroom.mp3"
 		super!
 		@tree = Entity x: 21*64, y: 18*64, w: 64, h: 64, image: love.graphics.newImage("images/Pomegranate Tree.png")
 		export isDialogue = true
@@ -26,6 +27,7 @@ class Kabul extends BaseState
 		export world = bump.newWorld!
 		export map = sti("data/Kabul Concept.lua", {"bump"})
 		player.p.x, player.p.y, player.p.lives = 48*64, 34*64, 5
+		@music = "sound/kabul.mp3"
 		super!
 	update: (dt) =>
 		player\update(dt)

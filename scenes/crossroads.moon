@@ -4,6 +4,7 @@ class CrossRoads extends BaseState
 		export world = bump.newWorld!
 		export map = sti("data/Cross Roads.lua", {"bump"})
 		export isDialogue = true
+		@music = "sound/crossroads.mp3"
 		super!
 		player.p.x, player.p.y, player.p.lives, player.p.anim = 42*64, 46*64, 5, anim8.newAnimation(player.p.g('1-2',1, '1-2',2), 0.1)
 		@oedipus = Entity x: 37*64, y: 48*64, w: 64, h: 64, speed: 200, image: love.graphics.newImage("images/Blind Oedipus.png")
@@ -35,6 +36,7 @@ class CrossRoads2 extends BaseState
 		export world = bump.newWorld!
 		export map = sti("data/Cross Roads.lua", {"bump"})
 		export isDialogue = true
+		@music = "sound/crossroads.mp3"
 		super!
 		player.p.x, player.p.y, player.p.lives, player.p.image, player.p.anim = 45*64, 47*64, 5, love.graphics.newImage("images/Young Man.png"), anim8.newAnimation(player.p.g('1-2',1, '1-2',2), 0.1)
 		@oedipus = Entity x: 40*64, y: 45*64, w: 64, h: 64, speed: 200, image: love.graphics.newImage("images/Blind Oedipus.png")
@@ -60,6 +62,7 @@ class CrossRoads3 extends BaseState
 		export world = bump.newWorld!
 		export map = sti("data/Cross Roads.lua", {"bump"})
 		export isDialogue = true
+		@music = "sound/crossroads.mp3"
 		super!
 		player.p.x, player.p.y, player.p.lives, player.p.image = 40*64, 46*64, 5, love.graphics.newImage("images/Blind Oedipus.png")
 		player.p.g = anim8.newGrid(16, 16, player.p.image\getWidth!, player.p.image\getHeight!)
@@ -118,11 +121,13 @@ class CrossRoadsFight extends BaseState
 		export map = sti("data/Cross Roads.lua", {"bump"})
 		@recentScramble = false
 		@died = false
-		@cutScene = love.graphics.newVideo("cutscenes/Jocasta.ogv")
+		@cutScene = love.graphics.newVideo("cutscenes/Oedipus-Sphinx.ogv")
+		@cutScene2 = love.graphics.newVideo("cutscenes/Crowning.ogv")
 		player.p.x, player.p.y, player.p.lives, player.p.image = 56*64, 49*64, 5, love.graphics.newImage("images/Oedipus.png")
 		player.p.g = anim8.newGrid(16, 16, player.p.image\getWidth!, player.p.image\getHeight!)
 		player.p.anim = anim8.newAnimation(player.p.g('1-3',1, '1-3',2, '1-2',2), 0.1)
 		player\scramble(.01)
+		@music = "sound/laius.mp3"
 		super!
 		export laius = Entity x: 36*64, y: 52*64, dx: 0, dy: 0, w: 64, h: 64, speed: 100, image: love.graphics.newImage("images/Laius.png"), lives: 30
 		player\moveTo(tile(39, 50), ->
@@ -167,6 +172,7 @@ class CrossRoadsFight extends BaseState
 				@cutScene\play!
 				Timer.clear!
 				player.order = clone(player.base)
+				@i = 0
 			)
 		if #enemies > 0
 			for i=#enemies,1,-1 do enemies[i]\update(dt,i)
@@ -175,7 +181,11 @@ class CrossRoadsFight extends BaseState
 		if @died
 			cX,cY = camera\worldCoords(love.graphics.getWidth!/2, 0)
 			love.graphics.draw(@cutScene, cX, cY, 0, love.graphics.getHeight!/@cutScene\getHeight!, love.graphics.getHeight!/@cutScene\getHeight!, @cutScene\getWidth!/2)
-			if not @cutScene\isPlaying! then export STATE = Thebes!
+			if not @cutScene\isPlaying! then 
+				if @i == 1 then export STATE = Thebes!
+				@i += 1
+				@cutScene = @cutScene2
+				@cutScene\play!
 		else
 			super!
 			for i,v in ipairs(enemies) do v\draw!

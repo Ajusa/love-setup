@@ -4,6 +4,7 @@ class America extends BaseState
 		export world = bump.newWorld!
 		export map = sti("data/The Streets of America.lua", {"bump"})
 		player.p.x, player.p.y, player.p.lives = 25*64, 48*64, 5
+		@music = "sound/america.mp3"
 		super!
 		@barker = Entity x: 17*64, y: 12*64, w: 64, h: 64, speed: 200, image: love.graphics.newImage("images/Mrs. Barker.png")
 		--player\moveTo(tile(43, 10))
@@ -68,6 +69,7 @@ class AmericaFight extends BaseState
 		player.p.x, player.p.y, player.p.lives = 24*64, 48*64, 5
 		@died = false
 		@cutScene = love.graphics.newVideo("cutscenes/Mommy-death.ogv")
+		@music = "sound/mommy.mp3"
 		super!
 		export mommy = Mommy x:24*64, y: 18*64, dx:0, dy:0, speed: 100, lives: 30, image: love.graphics.newImage("images/Mommy.png")
 		player\moveTo(tile(24, 22), -> mommy\talk!)

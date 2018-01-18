@@ -41,6 +41,7 @@ do
         "bump"
       })
       player.p.x, player.p.y, player.p.lives = 30 * 64, 12 * 64, 5
+      self.music = "sound/kabul.mp3"
       _class_0.__parent.__init(self)
       self.baba = Entity({
         x = 16 * 64,

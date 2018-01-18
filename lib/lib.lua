@@ -133,7 +133,14 @@ do
   _class_0 = setmetatable({
     __init = function(self)
       map:bump_init(world)
-      return world:add(player, player.p.x + 4, player.p.y + 4, 48, 48)
+      world:add(player, player.p.x + 4, player.p.y + 4, 48, 48)
+      love.audio.stop()
+      if self.music ~= nil then
+        local music = love.audio.newSource(self.music)
+        music:setVolume(0.4)
+        music:setLooping(true)
+        return music:play()
+      end
     end,
     __base = _base_0,
     __name = "BaseState"

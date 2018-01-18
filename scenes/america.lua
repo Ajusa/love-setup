@@ -31,6 +31,7 @@ do
         "bump"
       })
       player.p.x, player.p.y, player.p.lives = 25 * 64, 48 * 64, 5
+      self.music = "sound/america.mp3"
       _class_0.__parent.__init(self)
       self.barker = Entity({
         x = 17 * 64,
@@ -263,6 +264,7 @@ do
       player.p.x, player.p.y, player.p.lives = 24 * 64, 48 * 64, 5
       self.died = false
       self.cutScene = love.graphics.newVideo("cutscenes/Mommy-death.ogv")
+      self.music = "sound/mommy.mp3"
       _class_0.__parent.__init(self)
       mommy = Mommy({
         x = 24 * 64,
